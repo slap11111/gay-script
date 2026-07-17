@@ -121124,10 +121124,10 @@ NAgui.addButton("Credits", function()
 	if DoPopup then
 		DoPopup({
 			Title = "Credits",
-			Description = "Main Developer: cat\nHelpers: Fanta, Zosua"
+			Description = "Main Developer: cat\nHelpers: Fanta, Zosua, R1ZE"
 		})
 	else
-		DoNotif("Main Developer: cat | Helpers: Fanta, Zosua", 5)
+		DoNotif("Main Developer: cat | Helpers: Fanta, Zosua, R1ZE", 5)
 	end
 end)
 NAgui.addButton("Discord Server", function()

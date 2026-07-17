@@ -2,7 +2,7 @@
 -- ║            gay script :3 aimbot                                  ║
 -- ╠══════════════════════════════════════════════════════════════════╣
 -- ║  Developer: cat                                                  ║
--- ║  Helpers: fanta, zosua                                           ║
+-- ║  Helpers: fanta, zosua, R1ZE                                           ║
 -- ║  Version: 4.2.5                                                  ║
 -- ╚══════════════════════════════════════════════════════════════════╝
 
@@ -85,6 +85,8 @@ local AimState = {
 }
 local Flags = {
     ["Aim/AimLock"] = true,
+    ["Aim/KeybindEnabled"] = false,
+    ["Aim/AimKey"] = "E",
     ["Aim/AlwaysEnabled"] = true,
     ["Aim/ShowAssistDots"] = false,
     ["Aim/TeamCheck"] = false,
@@ -3128,6 +3130,7 @@ function UI.CreateButton(page, text, callback)
         TweenService:Create(Button, TWEENS.INSTANT, {Size = UDim2.new(1, 0, 0, 36)}):Play()
         if callback then callback() end
     end))
+    return Button
 end
 
 function GetPing()
@@ -9167,6 +9170,7 @@ UI.CreateSection(CreditsTab, "Credits")
 UI.CreateButton(CreditsTab, "Developer: cat", function() end)
 UI.CreateButton(CreditsTab, "Helper: fanta", function() end)
 UI.CreateButton(CreditsTab, "Helper: zosua", function() end)
+UI.CreateButton(CreditsTab, "Helper: R1ZE", function() end)
 
 
 function ShowWorldHumList(page)
@@ -9686,7 +9690,32 @@ if SAFE_MODE then
 end
 UI.CreateSection(AimTab, "Camera Tracking Assistant")
 UI.CreateToggle(AimTab, "Enable Camera Tracking (Ctrl + ~)", "Aim/AimLock", Flags["Aim/AimLock"])
-UI.CreateToggle(AimTab, "Always Active (No Keybind — If OFF: hold RMB to track)", "Aim/AlwaysEnabled", Flags["Aim/AlwaysEnabled"])
+UI.CreateToggle(AimTab, "Always Active (Auto tracking)", "Aim/AlwaysEnabled", Flags["Aim/AlwaysEnabled"])
+UI.CreateToggle(AimTab, "Use Custom Keybind instead of RMB", "Aim/KeybindEnabled", Flags["Aim/KeybindEnabled"])
+local BindingActive = false
+local AimKeyButton
+AimKeyButton = UI.CreateButton(AimTab, "Tracking Keybind: " .. (Flags["Aim/AimKey"] or "E"), function()
+	if BindingActive then return end
+	BindingActive = true
+	AimKeyButton.Text = "Press any key..."
+	local conn
+	conn = Services.UserInputService.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			local keyName = input.KeyCode.Name
+			Flags["Aim/AimKey"] = keyName
+			AimKeyButton.Text = "Tracking Keybind: " .. keyName
+			conn:Disconnect()
+			BindingActive = false
+		elseif input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.MouseButton2 or input.UserInputType == Enum.UserInputType.MouseButton3 then
+			local buttonName = input.UserInputType.Name
+			Flags["Aim/AimKey"] = buttonName
+			AimKeyButton.Text = "Tracking Keybind: " .. buttonName
+			conn:Disconnect()
+			BindingActive = false
+		end
+	end)
+end)
+
 UI.CreateToggle(AimTab, "Ignore Teammates", "Aim/TeamCheck", Flags["Aim/TeamCheck"])
 UI.CreateToggle(AimTab, "Visibility Check (Raycast)", "Aim/VisibilityCheck", Flags["Aim/VisibilityCheck"])
 UI.CreateToggle(AimTab, "Show Tracking Indicator Dots", "Aim/ShowAssistDots", Flags["Aim/ShowAssistDots"])

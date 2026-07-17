@@ -121140,6 +121140,16 @@ if IsOnMobile then
 end
 
 NAgui.addSection("Links")
+NAgui.addButton("Credits", function()
+	if DoPopup then
+		DoPopup({
+			Title = "Credits",
+			Description = "Main Developer: cat\nHelpers: Fanta, Zosua, R1ZE"
+		})
+	else
+		DoNotif("Main Developer: cat | Helpers: Fanta, Zosua, R1ZE", 5)
+	end
+end)
 NAgui.addButton("Discord Server", function()
 	local inviteLink = NAmanage._sourceGlyph(NAStuff.inviteLink)
 	if setclipboard then
