@@ -21253,6 +21253,7 @@ NAmanage.SaveESPSettings = function(opts)
 		ESP_PlayerTargetMode = tostring(NAStuff.ESP_PlayerTargetMode or "all");
 		ESP_ShowName = (NAStuff.ESP_ShowName ~= false);
 		ESP_ShowHealth = (NAStuff.ESP_ShowHealth ~= false);
+		ESP_HealthBarEnabled = (NAStuff.ESP_HealthBarEnabled == true);
 		ESP_ShowDistance = (NAStuff.ESP_ShowDistance ~= false);
 		ESP_ShowPartDistance = (NAStuff.ESP_ShowPartDistance == true);
 		ESP_RenderMode = mode;
@@ -31604,12 +31605,13 @@ NAmanage.ESP_UpdateDrawingBox = function(data, inst, color, fillTransparency)
 			local H = height
 			local barGap = 2
 			local barWidth = 2
-			local Health = math.clamp(hum.Health, 0, hum.MaxHealth)
-			local HP_Percentage = Health / hum.MaxHealth
+			local maxHP = hum.MaxHealth > 0 and hum.MaxHealth or 100
+			local Health = math.clamp(hum.Health, 0, maxHP)
+			local HP_Percentage = Health / maxHP
 			local BarColor = Color3.fromHSV(HP_Percentage * 0.33, 1, 1)
 			local BarX = Left - barGap - barWidth - 2
 			local FillHeight = math.floor((H + 1) * HP_Percentage)
-			pcall(function()
+			local okBar, err = pcall(function()
 				data.drawingHealthOutline.Position = Vector2.new(BarX, Top - 1)
 				data.drawingHealthOutline.Size = Vector2.new(barWidth + 2, H + 3)
 				data.drawingHealthOutline.Visible = true
@@ -31618,6 +31620,9 @@ NAmanage.ESP_UpdateDrawingBox = function(data, inst, color, fillTransparency)
 				data.drawingHealthBar.Color = BarColor
 				data.drawingHealthBar.Visible = true
 			end)
+			if not okBar then
+				warn("[ESP Healthbar error]: " .. tostring(err))
+			end
 		else
 			pcall(function()
 				data.drawingHealthOutline.Visible = false
