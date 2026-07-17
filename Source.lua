@@ -29454,7 +29454,7 @@ end
 
 NAmanage.DrawingUpdateSquare = function(square, inst, color, fillTransparency, options)
 	if not square then return false end
-	local minX, minY, width, height = NAmanage.GetPreciseViewportBounds(inst)
+	local minX, minY, width, height = NAgui.getInstanceViewportBounds(inst)
 	if not minX then
 		pcall(function()
 			square.Visible = false
@@ -31454,16 +31454,28 @@ NAmanage.ESP_EnsureDrawingObjects = function(data)
 	local healthBarEnabled = NAStuff.ESP_HealthBarEnabled == true and NAmanage.DrawingObjectSupported and NAmanage.DrawingObjectSupported("Square")
 	if healthBarEnabled then
 		if not data.drawingHealthOutline then
-			data.drawingHealthOutline = NAmanage.DrawingCreateSquare(Color3.new(0, 0, 0), 0, {
-				filled = true;
-				thickness = 1;
-			})
+			pcall(function()
+				local sq = Drawing.new("Square")
+				sq.Visible = false
+				sq.Transparency = 1
+				sq.Thickness = 0
+				sq.Filled = true
+				sq.Color = Color3.new(0, 0, 0)
+				sq.ZIndex = 1
+				data.drawingHealthOutline = sq
+			end)
 		end
 		if not data.drawingHealthBar then
-			data.drawingHealthBar = NAmanage.DrawingCreateSquare(Color3.new(0, 1, 0), 0, {
-				filled = true;
-				thickness = 1;
-			})
+			pcall(function()
+				local sq = Drawing.new("Square")
+				sq.Visible = false
+				sq.Transparency = 1
+				sq.Thickness = 0
+				sq.Filled = true
+				sq.Color = Color3.new(0, 1, 0)
+				sq.ZIndex = 2
+				data.drawingHealthBar = sq
+			end)
 		end
 	else
 		if data.drawingHealthOutline then
@@ -31555,7 +31567,7 @@ NAmanage.ESP_UpdateDrawingBox = function(data, inst, color, fillTransparency)
 	if not data then
 		return false
 	end
-	local minX, minY, width, height = NAgui.getInstanceViewportBounds(inst)
+	local minX, minY, width, height = NAmanage.GetPreciseViewportBounds(inst)
 	if not minX then
 		NAmanage.ESP_HideDrawingElements(data)
 		return true
@@ -32719,17 +32731,8 @@ NAmanage.ESP_Add = function(target, persistent, isNPC)
 end
 
 NAmanage.ESP_StartGlobal = function()
-	local desiredEvent = (NAgui.espUsesDrawing("players") or NAgui.espUsesDrawing("npcs")) and RunService.RenderStepped or RunService.Heartbeat
-	local currentEventName = NAStuff.ESP_CurrentEventName
-	if NAlib.isConnected("esp_update_global") then
-		if currentEventName == desiredEvent then
-			return
-		else
-			NAlib.disconnect("esp_update_global")
-		end
-	end
-	NAStuff.ESP_CurrentEventName = desiredEvent
-	NAlib.connect("esp_update_global", desiredEvent:Connect(function()
+	if NAlib.isConnected("esp_update_global") then return end
+	NAlib.connect("esp_update_global", RunService.Heartbeat:Connect(function()
 		if not (ESPenabled or chamsEnabled) then return end
 		local list = NAStuff.ESP_ModelList
 		local n = list and #list or 0
