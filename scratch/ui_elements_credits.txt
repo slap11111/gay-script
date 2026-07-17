@@ -1,0 +1,229 @@
+--- Line 9607 ---
+9604: myRoot.CFrame = targetPart.CFrame * CFrame.new(0, 3, 0)
+9605: UI.Notify("Teleport", "Teleported to " .. hum.Parent.Name)
+9606: else
+9607: UI.Notify("Teleport Error", "Target humanoid location could not be determined.")
+9608: end
+9609: end))
+9610: 
+
+
+--- Line 9684 ---
+9681: UI.CreateToggle(AimTab, "Always Active (No Keybind — If OFF: hold RMB to track)", "Aim/AlwaysEnabled", Flags["Aim/AlwaysEnabled"])
+9682: UI.CreateToggle(AimTab, "Ignore Teammates", "Aim/TeamCheck", Flags["Aim/TeamCheck"])
+9683: UI.CreateToggle(AimTab, "Visibility Check (Raycast)", "Aim/VisibilityCheck", Flags["Aim/VisibilityCheck"])
+9684: UI.CreateToggle(AimTab, "Show Tracking Indicator Dots", "Aim/ShowAssistDots", Flags["Aim/ShowAssistDots"])
+9685: UI.CreateNumericInput(AimTab, "Attraction Strength", "Aim/AttractionStrength", Flags["Aim/AttractionStrength"], 0, 500, 10, "%")
+9686: UI.CreateNumericInput(AimTab, "FOV Radius", "Aim/FOV/Radius", Flags["Aim/FOV/Radius"], 0, 500, 5, "px")
+9687: UI.CreateToggle(AimTab, "Show FOV Circle", "Aim/FOV/ShowCircle", Flags["Aim/FOV/ShowCircle"])
+
+
+--- Line 9855 ---
+9852: UI.CreateToggle(VisualsTab, "Draw Nickname", "ESP/ShowNickname", Flags["ESP/ShowNickname"])
+9853: UI.CreateToggle(VisualsTab, "Draw Username", "ESP/ShowUsername", Flags["ESP/ShowUsername"])
+9854: UI.CreateToggle(VisualsTab, "Draw Distance", "ESP/ShowDistance", Flags["ESP/ShowDistance"])
+9855: UI.CreateToggle(VisualsTab, "Draw Health Indicator", "ESP/HealthIndicator", Flags["ESP/HealthIndicator"])
+9856: UI.CreateToggle(VisualsTab, "Draw Equipped Item", "ESP/ShowEquipped", Flags["ESP/ShowEquipped"])
+9857: UI.CreateNumericInput(VisualsTab, "Nametag Opacity", "ESP/NametagOpacity", Flags["ESP/NametagOpacity"], 0, 100, 5, "%", function(val)
+9858: UpdateAllNametagOpacities()
+
+
+--- Line 9877 ---
+9874: UI.CreateToggle(VisualsTab, "Show Performance Panel", "LocalUI/PerformancePanel", Flags["LocalUI/PerformancePanel"], function(state)
+9875: if PerformanceLabel then PerformanceLabel.Visible = state end
+9876: end)
+9877: UI.CreateToggle(VisualsTab, "Show Local Health Indicator", "LocalUI/LocalHealthIndicator", Flags["LocalUI/LocalHealthIndicator"], function(state)
+9878: if LocalHealthHUD then LocalHealthHUD.Visible = state end
+9879: end)
+9880: UI.CreateToggle(VisualsTab, "Show Closest Player Tracker", "LocalUI/ClosestPlayerTracker", Flags["LocalUI/ClosestPlayerTracker"], function(state)
+
+
+--- Line 9965 ---
+9962: -- Local table to hold updater functions so the Refresh button can repopulate all fields
+9963: local LiveLightingUpdaters = {}
+9964: 
+9965: -- Helper: create a numeric input that reads/writes directly to Services.Lighting
+9966: -- getter()  -> current numeric value
+9967: -- setter(v) -> applies v to the world immediately
+9968: local function MakeLiveLightingNumeric(labelText, key, getter, setter, minV, maxV, stepV, unit)
+
+
+--- Line 9982 ---
+9979: end
+9980: end
+9981: 
+9982: -- Helper: create a toggle that reads/writes a boolean property on Services.Lighting
+9983: local function MakeLiveLightingToggle(labelText, key, getter, setter)
+9984: local currentVal = getter()
+9985: UI.CreateToggle(VisualsTab, labelText, "LiveLight/" .. key, currentVal,
+
+
+--- Line 10513 ---
+10510: Url = "http://127.0.0.1:6463/rpc?v=1",
+10511: Method = "POST",
+10512: Headers = {
+10513: ["Content-Type"] = "application/json",
+10514: ["Origin"] = "https://discord.com"
+10515: },
+10516: Body = game:GetService("HttpService"):JSONEncode({
+
+
+--- Line 10711 ---
+10708: end
+10709: else
+10710: 
+10711: local mouseLoc = UserInputService:GetMouseLocation()
+10712: local origin, direction = GetMouseRay()
+10713: local raycastHit = nil
+10714: if origin and direction then
+
+
+--- Line 11216 ---
+11213: local TARGET_CACHE_DURATION = 0.016
+11214: 
+11215: local function IsCursorOverMenu()
+11216: local mouseLoc = Services.UserInputService:GetMouseLocation()
+11217: local mx, my = mouseLoc.X, mouseLoc.Y
+11218: 
+11219: local function isOverFrame(frame)
+
+
+--- Line 11259 ---
+11256: 
+11257: if UIState.PriorityLabel then
+11258: local selectedCount = 0
+11259: local lastCategory = "Head"
+11260: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+11261: if enabled then
+11262: selectedCount = selectedCount + 1
+
+
+--- Line 11260 ---
+11257: if UIState.PriorityLabel then
+11258: local selectedCount = 0
+11259: local lastCategory = "Head"
+11260: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+11261: if enabled then
+11262: selectedCount = selectedCount + 1
+11263: lastCategory = category
+
+
+--- Line 11263 ---
+11260: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+11261: if enabled then
+11262: selectedCount = selectedCount + 1
+11263: lastCategory = category
+11264: end
+11265: end
+11266: 
+
+
+--- Line 11270 ---
+11267: if selectedCount == 0 or selectedCount == 6 then
+11268: UIState.PriorityLabel.Text = "Priority: Closest part"
+11269: elseif selectedCount == 1 then
+11270: UIState.PriorityLabel.Text = "Priority: " .. lastCategory
+11271: else
+11272: 
+11273: if CachedTarget then
+
+
+--- Line 11275 ---
+11272: 
+11273: if CachedTarget then
+11274: local targetedPart = CachedTarget[3]
+11275: local categoryName = "Closest part"
+11276: for category, parts in pairs(TARGET_GROUPS) do
+11277: for _, pName in ipairs(parts) do
+11278: if targetedPart.Name == pName then
+
+
+--- Line 11276 ---
+11273: if CachedTarget then
+11274: local targetedPart = CachedTarget[3]
+11275: local categoryName = "Closest part"
+11276: for category, parts in pairs(TARGET_GROUPS) do
+11277: for _, pName in ipairs(parts) do
+11278: if targetedPart.Name == pName then
+11279: categoryName = category
+
+
+--- Line 11279 ---
+11276: for category, parts in pairs(TARGET_GROUPS) do
+11277: for _, pName in ipairs(parts) do
+11278: if targetedPart.Name == pName then
+11279: categoryName = category
+11280: break
+11281: end
+11282: end
+
+
+--- Line 11284 ---
+11281: end
+11282: end
+11283: end
+11284: UIState.PriorityLabel.Text = "Priority: " .. categoryName
+11285: else
+11286: UIState.PriorityLabel.Text = "Priority: Closest part"
+11287: end
+
+
+--- Line 11414 ---
+11411: if PerformanceLabel and not PerformanceLabel.Visible and Flags["LocalUI/PerformancePanel"] then
+11412: PerformanceLabel.Visible = true
+11413: end
+11414: if LocalHealthHUD and not LocalHealthHUD.Visible and Flags["LocalUI/LocalHealthIndicator"] then
+11415: LocalHealthHUD.Visible = true
+11416: end
+11417: end
+
+
+--- Line 11522 ---
+11519: if specPlayer then
+11520: if specPlayer.Parent then
+11521: local _, specRoot = GetCharacter(specPlayer)
+11522: if specRoot and LocalPlayer.ReplicationFocus ~= specRoot then
+11523: LocalPlayer.ReplicationFocus = specRoot
+11524: end
+11525: else
+
+
+--- Line 11523 ---
+11520: if specPlayer.Parent then
+11521: local _, specRoot = GetCharacter(specPlayer)
+11522: if specRoot and LocalPlayer.ReplicationFocus ~= specRoot then
+11523: LocalPlayer.ReplicationFocus = specRoot
+11524: end
+11525: else
+11526: 
+
+
+--- Line 11530 ---
+11527: AdvancedPlayerPanelState.Spectating = nil
+11528: local myHum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+11529: if myHum then Camera.CameraSubject = myHum end
+11530: LocalPlayer.ReplicationFocus = nil
+11531: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+11532: end
+11533: end
+
+
+--- Line 11531 ---
+11528: local myHum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+11529: if myHum then Camera.CameraSubject = myHum end
+11530: LocalPlayer.ReplicationFocus = nil
+11531: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+11532: end
+11533: end
+11534: end
+
+
+--- Line 11848 ---
+11845: end)
+11846: TrackThread(perfThread)
+11847: 
+11848: print(string.format("[Sp3arParvus v%s] Developer tool loaded successfully!", VERSION))
+11849: if SAFE_MODE then
+11850: UI.Notify(
+11851: string.format("Sp3arParvus v%s — Safe Mode", VERSION),
+

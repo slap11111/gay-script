@@ -1,0 +1,57 @@
+12: print(string.format("[gay script :3 aimbot v%s] Loading...", VERSION))
+15: print("[gay script :3 aimbot] Waiting for game to load...")
+18: print("[gay script :3 aimbot] Waiting for LocalPlayer...")
+28: return warn("[gay script :3 aimbot] Failed to get LocalPlayer after " .. MAX_INIT_WAIT .. " seconds. Aborting.")
+30: print("[gay script :3 aimbot] LocalPlayer ready: " .. LocalPlayer.Name)
+32: print("[gay script :3 aimbot] Checking for Character (non-blocking)...")
+44: warn("[gay script :3 aimbot] Character exists but not yet parented, continuing anyway...")
+48: print("[gay script :3 aimbot] No character at load time — continuing without one. Humanoid will be detected when spawned.")
+51: print("[gay script :3 aimbot] Waiting for Camera...")
+57: warn("[gay script :3 aimbot] Camera not found, continuing anyway...")
+61: print("[gay script :3 aimbot] Waiting for PlayerScripts to initialize...")
+75: print(string.format("[gay script :3 aimbot] Initialization complete! (%.2fs)", tick() - initStartTime))
+481: print("[gay script :3 aimbot] Humanoid detected late (deferred spawn) and captured.")
+489: print("[gay script :3 aimbot] Local character re-cached and ready.")
+493: if rawget(globalEnv, "gay script :3 aimbot") then
+494: return warn("[gay script :3 aimbot] Already loaded! Use Shutdown button to cleanup first.")
+891: print("[gay script :3 aimbot] Local Humanoid settings captured and synced.")
+2001: ScreenGui.Name = "gay script :3 aimbotUI"
+2066: local baseUrl = "https://www.pingbird.xyz/f/gay script :3 aimbot.png"
+2105: local iconPath = "gay script :3 aimbot_Icon.png"
+2126: splashGui.Name = "gay script :3 aimbotSplash"
+2188: logoImg.Image = "https://www.pingbird.xyz/f/gay script :3 aimbot.png"
+2202: titleLbl.Text = "gay script :3 aimbot  v" .. VERSION
+2349: icon.Image = CachedIconAsset or "https://www.pingbird.xyz/f/gay script :3 aimbot.png"
+2719: local minimizedText = "gay script :3 aimbot v" .. VERSION
+3595: print("[gay script :3 aimbot] Successfully cached RaycastFilterType.Exclude")
+3606: print("[gay script :3 aimbot] Successfully cached RaycastFilterType.Blacklist")
+6649: PoolFolder.Name = "gay script :3 aimbot_Pool"
+8360: if delfile and isfile and isfile("gay script :3 aimbot_Icon.png") then
+8361: pcall(delfile, "gay script :3 aimbot_Icon.png")
+8625: rawset(globalEnv, "gay script :3 aimbot", nil)
+8627: warn("[gay script :3 aimbot] Script Unloaded! You can now reload the script.")
+8631: UI.Notify("gay script :3 aimbot", "Reloading script...")
+8635: if isfile and isfile("gay script :3 aimbot.lua") then
+8636: loadstring(readfile("gay script :3 aimbot.lua"))()
+8637: elseif isfile and isfile("gay script :3 aimbot/gay script :3 aimbot.lua") then
+8638: loadstring(readfile("gay script :3 aimbot/gay script :3 aimbot.lua"))()
+8640: loadstring(game:HttpGet("https://raw.githubusercontent.com/JakeHukari/gay script :3 aimbot/refs/heads/main/gay script :3 aimbot.lua", true))()
+8645: UI.Notify("gay script :3 aimbot", "Fetching and reloading latest script version...")
+8649: loadstring(game:HttpGet("https://raw.githubusercontent.com/JakeHukari/gay script :3 aimbot/refs/heads/main/gay script :3 aimbot.lua", true))()
+8665: {Text = "-", Key = "Minus", Width = 1, KeyCode = Enum.KeyCode.Minus, Name = "Minimize Menu", Action = "Ctrl + -", Desc = "Minimizes or maximizes the main gay script :3 aimbot GUI window."},
+8688: {Text = "caps", Key = "CapsLock", Width = 1.75, KeyCode = Enum.KeyCode.CapsLock, Name = "Toggle Menu Visibility", Action = "CapsLock", Desc = "Toggles visibility of the main gay script :3 aimbot menu GUI."},
+9149: local Window = UI.CreateWindow("gay script :3 aimbot")
+10494: UI.CreateButton(MiscTab, "Copy gay script :3 aimbot GitHub Link", function()
+10495: local url = "https://www.pingbird.xyz/~/gay script :3 aimbot"
+10499: UI.Notify("GitHub", "gay script :3 aimbot link has been added to clipboard", 5)
+10949: UI.Notify("gay script :3 aimbot", "Unloaded with 'Ctrl+U'")
+11856: print(string.format("[gay script :3 aimbot v%s] Developer tool loaded successfully!", VERSION))
+11859: string.format("gay script :3 aimbot v%s — Safe Mode", VERSION),
+11863: print(string.format("[gay script :3 aimbot v%s] ✓ SAFE MODE active — Camera Tracking and Input Simulation are OFF", VERSION))
+11866: string.format("gay script :3 aimbot v%s", VERSION),
+11867: string.format("gay script :3 aimbot v%s loaded. Camera Tracking: %s | ESP: %s | Safe Mode: OFF",
+11873: print(string.format("[gay script :3 aimbot v%s] Camera Tracking: %s | ESP: %s | Input Sim: %s",
+11880: print(string.format("[gay script :3 aimbot v%s] Br3ak3r: %s", VERSION, Flags["Br3ak3r/Enabled"] and "ON" or "OFF"))
+11881: print(string.format("[gay script :3 aimbot v%s] Press RIGHT SHIFT to toggle UI visibility", VERSION))
+11882: print(string.format("[gay script :3 aimbot v%s] Br3ak3r Controls: Ctrl+Click=Break | Ctrl+Z=Undo | Ctrl+B=Toggle", VERSION))
+11883: print(string.format("[gay script :3 aimbot v%s] Distance Colors: Pink=Closest | Red≤750 | Yellow≤1875 | Green>1875", VERSION))

@@ -1,0 +1,131 @@
+--- Line 2 ---
+1: -- ╔══════════════════════════════════════════════════════════════════╗
+2: -- ║            Sp3arParvus — Developer Tool                          ║
+3: -- ╠══════════════════════════════════════════════════════════════════╣
+4: -- ║  Version: 4.2.5                                                  ║
+5: -- ╚══════════════════════════════════════════════════════════════════╝
+6: 
+7: local VERSION = "4.2.5" -- Shortcuts Page Update, Performance Update, and Closest-Player-Panel Settings Update
+
+
+--- Line 127 ---
+123: ["ESP/ShowStatus"] = true,
+124: ["ESP/ShowNickname"] = true,
+125: ["ESP/ShowUsername"] = true,
+126: ["ESP/ShowDistance"] = true,
+127: ["ESP/HealthIndicator"] = true,
+128: ["ESP/ShowEquipped"] = true,
+129: ["ESP/AdvancedPlayerPanel"] = false,
+130: ["ESP/PlayerOutlines"] = true,
+131: ["Visuals/Fullbright"] = false,
+132: ["Visuals/FullDark"] = false,
+
+
+--- Line 160 ---
+156: ["Visuals/FullDark/SkyGlare"]           = 0,
+157: ["Visuals/FullDark/ExposureCompensation"] = -2,
+158: ["Visuals/UIScale"] = 1,
+159: ["LocalUI/PerformancePanel"] = true,
+160: ["LocalUI/LocalHealthIndicator"] = true,
+161: ["LocalUI/ClosestPlayerTracker"] = true,
+162: ["LocalUI/ClosestPlayer/ShowDisplayName"] = false,
+163: ["LocalUI/ClosestPlayer/ShowUsername"] = true,
+164: ["LocalUI/ClosestPlayer/ShowDistance"] = true,
+165: ["LocalUI/ClosestPlayer/ShowHealth"] = false,
+
+
+--- Line 215 ---
+211: ActiveDraggedFrame = nil,
+212: DragStart = nil,
+213: StartPos = nil
+214: }
+215: local PROPERTY_CATEGORIES = {
+216: Data = {"Name", "ClassName", "Value", "Text"},
+217: Appearance = {"Color", "BrickColor", "Transparency", "Reflectance", "Material"},
+218: Behavior = {"CanCollide", "CanTouch", "CanQuery", "Anchored", "Locked", "Archivable"},
+219: Stats = {"Health", "MaxHealth", "WalkSpeed", "JumpPower", "JumpHeight"},
+220: Transform = {"Position", "Size", "Rotation", "CFrame"}
+
+
+--- Line 750 ---
+746: if mouseBehavior == Enum.MouseBehavior.LockCenter then
+747: return viewportSize.X * 0.5, viewportSize.Y * 0.5, true
+748: end
+749: 
+750: local mouseLoc = Services.UserInputService:GetMouseLocation()
+751: 
+752: local crosshairX = mouseLoc.X
+753: local crosshairY = mouseLoc.Y
+754: 
+755: if crosshairX ~= crosshairX or crosshairY ~= crosshairY then
+
+
+--- Line 1295 ---
+1291: Br3ak3rState.brokenCacheDirty = false
+1292: end
+1293: 
+1294: function GetMouseRay()
+1295: local mouseLocation = Services.UserInputService:GetMouseLocation()
+1296: local inset = Services.GuiService:GetGuiInset()
+1297: local adjustedLocation = mouseLocation - inset
+1298: 
+1299: if not Camera then Camera = Services.Workspace.CurrentCamera end
+1300: if not Camera then return nil end
+
+
+--- Line 1297 ---
+1293: 
+1294: function GetMouseRay()
+1295: local mouseLocation = Services.UserInputService:GetMouseLocation()
+1296: local inset = Services.GuiService:GetGuiInset()
+1297: local adjustedLocation = mouseLocation - inset
+1298: 
+1299: if not Camera then Camera = Services.Workspace.CurrentCamera end
+1300: if not Camera then return nil end
+1301: 
+1302: local ray = Camera:ScreenPointToRay(adjustedLocation.X, adjustedLocation.Y)
+
+
+--- Line 1302 ---
+1298: 
+1299: if not Camera then Camera = Services.Workspace.CurrentCamera end
+1300: if not Camera then return nil end
+1301: 
+1302: local ray = Camera:ScreenPointToRay(adjustedLocation.X, adjustedLocation.Y)
+1303: if not ray then return nil end
+1304: 
+1305: return ray.Origin, ray.Direction * RAYCAST_MAX_DISTANCE, mouseLocation.X, mouseLocation.Y
+1306: end
+1307: 
+
+
+--- Line 1305 ---
+1301: 
+1302: local ray = Camera:ScreenPointToRay(adjustedLocation.X, adjustedLocation.Y)
+1303: if not ray then return nil end
+1304: 
+1305: return ray.Origin, ray.Direction * RAYCAST_MAX_DISTANCE, mouseLocation.X, mouseLocation.Y
+1306: end
+1307: 
+1308: MAX_IGNORE_COUNT = 200
+1309: 
+1310: function WorldRaycastBr3ak3r(origin, direction, ignoreLocalChar, extraIgnore)
+
+
+--- Line 1541 ---
+1537: if H1ghl1ght3rState.highlightedSet[part] then return end
+1538: 
+1539: local hl = Instance.new("Highlight")
+1540: 
+1541: <truncated 415819 bytes>
+1542: 
+1543: NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.
+
+
+--- Line 1543 ---
+1539: local hl = Instance.new("Highlight")
+1540: 
+1541: <truncated 415819 bytes>
+1542: 
+1543: NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.
+

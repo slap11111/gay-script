@@ -1,0 +1,7 @@
+2307: function UI.Notify(title, text, duration)
+2459: function UI.CreateWindow(title)
+2801: function UI.CreateTab(name, icon)
+2878: function UI.CreateSection(page, name)
+2896: function UI.CreateToggle(page, text, flag, default, callback, lockable)
+2988: function UI.CreateNumericInput(page, text, flag, default, min, max, step, unit, callback, lockable)
+3100: function UI.CreateButton(page, text, callback)

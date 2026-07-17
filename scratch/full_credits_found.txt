@@ -1,0 +1,1411 @@
+--- Line 2 ---
+1: -- ╔══════════════════════════════════════════════════════════════════╗
+2: -- ║            Sp3arParvus — Developer Tool                          ║
+3: -- ╠══════════════════════════════════════════════════════════════════╣
+4: -- ║  Version: 4.2.5                                                  ║
+5: -- ╚══════════════════════════════════════════════════════════════════╝
+
+
+--- Line 98 ---
+96: ["Aim/Priority"] = "Head",
+97: ["Aim/TargetBlacklistedThroughTerrain"] = true,
+98: ["Aim/BypassBlacklistPriorityIfOccludedOrFar"] = false,
+99: ["Aim/BlacklistBypassDistance"] = 200,
+100: ["Aim/BodyParts"] = {"Head"},
+101: ["Aim/TargetGroups"] = {
+
+
+--- Line 99 ---
+97: ["Aim/TargetBlacklistedThroughTerrain"] = true,
+98: ["Aim/BypassBlacklistPriorityIfOccludedOrFar"] = false,
+99: ["Aim/BlacklistBypassDistance"] = 200,
+100: ["Aim/BodyParts"] = {"Head"},
+101: ["Aim/TargetGroups"] = {
+102: Head = true,
+
+
+--- Line 127 ---
+125: ["ESP/ShowUsername"] = true,
+126: ["ESP/ShowDistance"] = true,
+127: ["ESP/HealthIndicator"] = true,
+128: ["ESP/ShowEquipped"] = true,
+129: ["ESP/AdvancedPlayerPanel"] = false,
+130: ["ESP/PlayerOutlines"] = true,
+
+
+--- Line 160 ---
+158: ["Visuals/UIScale"] = 1,
+159: ["LocalUI/PerformancePanel"] = true,
+160: ["LocalUI/LocalHealthIndicator"] = true,
+161: ["LocalUI/ClosestPlayerTracker"] = true,
+162: ["LocalUI/ClosestPlayer/ShowDisplayName"] = false,
+163: ["LocalUI/ClosestPlayer/ShowUsername"] = true,
+
+
+--- Line 215 ---
+213: StartPos = nil
+214: }
+215: local PROPERTY_CATEGORIES = {
+216: Data = {"Name", "ClassName", "Value", "Text"},
+217: Appearance = {"Color", "BrickColor", "Transparency", "Reflectance", "Material"},
+218: Behavior = {"CanCollide", "CanTouch", "CanQuery", "Anchored", "Locked", "Archivable"},
+
+
+--- Line 750 ---
+748: end
+749: 
+750: local mouseLoc = Services.UserInputService:GetMouseLocation()
+751: 
+752: local crosshairX = mouseLoc.X
+753: local crosshairY = mouseLoc.Y
+
+
+--- Line 956 ---
+954: end
+955: 
+956: local _nearbyOverlapParams = OverlapParams.new()
+957: _nearbyOverlapParams.MaxParts = 500
+958: 
+959: function GetNearbyHumanoids()
+
+
+--- Line 957 ---
+955: 
+956: local _nearbyOverlapParams = OverlapParams.new()
+957: _nearbyOverlapParams.MaxParts = 500
+958: 
+959: function GetNearbyHumanoids()
+960: local humanoids = {}
+
+
+--- Line 959 ---
+957: _nearbyOverlapParams.MaxParts = 500
+958: 
+959: function GetNearbyHumanoids()
+960: local humanoids = {}
+961: local seen = {}
+962: local myChar = LocalPlayer.Character
+
+
+--- Line 964 ---
+962: local myChar = LocalPlayer.Character
+963: 
+964: _nearbyOverlapParams.FilterDescendantsInstances = myChar and {myChar} or {}
+965: if CachedFilterType and _nearbyOverlapParams.FilterType ~= CachedFilterType then
+966: _nearbyOverlapParams.FilterType = CachedFilterType
+967: end
+
+
+--- Line 965 ---
+963: 
+964: _nearbyOverlapParams.FilterDescendantsInstances = myChar and {myChar} or {}
+965: if CachedFilterType and _nearbyOverlapParams.FilterType ~= CachedFilterType then
+966: _nearbyOverlapParams.FilterType = CachedFilterType
+967: end
+968: 
+
+
+--- Line 966 ---
+964: _nearbyOverlapParams.FilterDescendantsInstances = myChar and {myChar} or {}
+965: if CachedFilterType and _nearbyOverlapParams.FilterType ~= CachedFilterType then
+966: _nearbyOverlapParams.FilterType = CachedFilterType
+967: end
+968: 
+969: local parts = Services.Workspace:GetPartBoundsInRadius(Camera.CFrame.Position, 500, _nearbyOverlapParams)
+
+
+--- Line 969 ---
+967: end
+968: 
+969: local parts = Services.Workspace:GetPartBoundsInRadius(Camera.CFrame.Position, 500, _nearbyOverlapParams)
+970: for i = 1, #parts do
+971: local part = parts[i]
+972: local model = part:FindFirstAncestorOfClass("Model")
+
+
+--- Line 1002 ---
+1000: if (now - lastWorldHumPresetScan) > 5.0 then
+1001: lastWorldHumPresetScan = now
+1002: local nearby = GetNearbyHumanoids()
+1003: for i = 1, #nearby do
+1004: local hum = nearby[i]
+1005: if hum.Name == "Horse" or (hum.Parent and hum.Parent.Name == "Horse") then
+
+
+--- Line 1003 ---
+1001: lastWorldHumPresetScan = now
+1002: local nearby = GetNearbyHumanoids()
+1003: for i = 1, #nearby do
+1004: local hum = nearby[i]
+1005: if hum.Name == "Horse" or (hum.Parent and hum.Parent.Name == "Horse") then
+1006: local path = GetUniquePath(hum)
+
+
+--- Line 1004 ---
+1002: local nearby = GetNearbyHumanoids()
+1003: for i = 1, #nearby do
+1004: local hum = nearby[i]
+1005: if hum.Name == "Horse" or (hum.Parent and hum.Parent.Name == "Horse") then
+1006: local path = GetUniquePath(hum)
+1007: if not WorldHumState.presetsApplied[path] then
+
+
+--- Line 1295 ---
+1293: 
+1294: function GetMouseRay()
+1295: local mouseLocation = Services.UserInputService:GetMouseLocation()
+1296: local inset = Services.GuiService:GetGuiInset()
+1297: local adjustedLocation = mouseLocation - inset
+1298: 
+
+
+--- Line 1297 ---
+1295: local mouseLocation = Services.UserInputService:GetMouseLocation()
+1296: local inset = Services.GuiService:GetGuiInset()
+1297: local adjustedLocation = mouseLocation - inset
+1298: 
+1299: if not Camera then Camera = Services.Workspace.CurrentCamera end
+1300: if not Camera then return nil end
+
+
+--- Line 1302 ---
+1300: if not Camera then return nil end
+1301: 
+1302: local ray = Camera:ScreenPointToRay(adjustedLocation.X, adjustedLocation.Y)
+1303: if not ray then return nil end
+1304: 
+1305: return ray.Origin, ray.Direction * RAYCAST_MAX_DISTANCE, mouseLocation.X, mouseLocation.Y
+
+
+--- Line 1305 ---
+1303: if not ray then return nil end
+1304: 
+1305: return ray.Origin, ray.Direction * RAYCAST_MAX_DISTANCE, mouseLocation.X, mouseLocation.Y
+1306: end
+1307: 
+1308: MAX_IGNORE_COUNT = 200
+
+
+--- Line 1931 ---
+1929: 
+1930: RefreshWaypointUI()
+1931: UI.Notify("Waypoints", string.format("Waypoint created at %.1f, %.1f, %.1f", position.X, position.Y, position.Z))
+1932: end
+1933: 
+1934: TweenService = Services.TweenService
+
+
+--- Line 2022 ---
+2020: if NotifyGui and NotifyGui.Parent then return NotifyGui end
+2021: NotifyGui = Instance.new("ScreenGui")
+2022: NotifyGui.Name = "Sp3arNotifications"
+2023: NotifyGui.DisplayOrder = 1000
+2024: NotifyGui.IgnoreGuiInset = true
+2025: pcall(function() NotifyGui.ScreenInsets = Enum.ScreenInsets.None end)
+
+
+--- Line 2059 ---
+2057: if str == nil or str == "" then return "unknown" end
+2058: return (tostring(str):gsub("[^%w%-_%.~]", function(c)
+2059: return string.format("%%%02X", string.byte(c))
+2060: end))
+2061: end
+2062: 
+
+
+--- Line 2098 ---
+2096: local iconUrl = baseUrl .. queryStr
+2097: 
+2098: local iconBytes = nil
+2099: pcall(function()
+2100: iconBytes = game:HttpGet(iconUrl)
+2101: end)
+
+
+--- Line 2100 ---
+2098: local iconBytes = nil
+2099: pcall(function()
+2100: iconBytes = game:HttpGet(iconUrl)
+2101: end)
+2102: 
+2103: local iconPath = "Sp3arParvus_Icon.png"
+
+
+--- Line 2104 ---
+2102: 
+2103: local iconPath = "Sp3arParvus_Icon.png"
+2104: if iconBytes and writefile and getcustomasset then
+2105: 
+2106: pcall(function()
+2107: if isfile and isfile(iconPath) then
+
+
+--- Line 2112 ---
+2110: end)
+2111: pcall(function()
+2112: writefile(iconPath, iconBytes)
+2113: CachedIconAsset = getcustomasset(iconPath)
+2114: end)
+2115: end
+
+
+--- Line 2314 ---
+2312: 
+2313: local frame = Instance.new("Frame")
+2314: frame.Name = "Notification"
+2315: frame.Size = UDim2.new(0, 280, 0, 0)
+2316: frame.AutomaticSize = Enum.AutomaticSize.Y
+2317: frame.BackgroundColor3 = UI_THEME.Background
+
+
+--- Line 2374 ---
+2372: titleLabel.BackgroundTransparency = 1
+2373: titleLabel.TextTransparency = 1
+2374: titleLabel.Text = title or "Notification"
+2375: titleLabel.TextColor3 = UI_THEME.Accent
+2376: titleLabel.TextSize = 14
+2377: titleLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+
+
+--- Line 2821 ---
+2819: TabLabel.Parent = TabButton
+2820: 
+2821: local Indicator = Instance.new("Frame")
+2822: Indicator.Size = UDim2.new(0, 3, 0, 16)
+2823: Indicator.Position = UDim2.new(0, 0, 0.5, -8)
+2824: Indicator.BackgroundColor3 = UI_THEME.Accent
+
+
+--- Line 2822 ---
+2820: 
+2821: local Indicator = Instance.new("Frame")
+2822: Indicator.Size = UDim2.new(0, 3, 0, 16)
+2823: Indicator.Position = UDim2.new(0, 0, 0.5, -8)
+2824: Indicator.BackgroundColor3 = UI_THEME.Accent
+2825: Indicator.BorderSizePixel = 0
+
+
+--- Line 2823 ---
+2821: local Indicator = Instance.new("Frame")
+2822: Indicator.Size = UDim2.new(0, 3, 0, 16)
+2823: Indicator.Position = UDim2.new(0, 0, 0.5, -8)
+2824: Indicator.BackgroundColor3 = UI_THEME.Accent
+2825: Indicator.BorderSizePixel = 0
+2826: Indicator.BackgroundTransparency = 1
+
+
+--- Line 2824 ---
+2822: Indicator.Size = UDim2.new(0, 3, 0, 16)
+2823: Indicator.Position = UDim2.new(0, 0, 0.5, -8)
+2824: Indicator.BackgroundColor3 = UI_THEME.Accent
+2825: Indicator.BorderSizePixel = 0
+2826: Indicator.BackgroundTransparency = 1
+2827: Indicator.Parent = TabButton
+
+
+--- Line 2825 ---
+2823: Indicator.Position = UDim2.new(0, 0, 0.5, -8)
+2824: Indicator.BackgroundColor3 = UI_THEME.Accent
+2825: Indicator.BorderSizePixel = 0
+2826: Indicator.BackgroundTransparency = 1
+2827: Indicator.Parent = TabButton
+2828: local indCorner = Instance.new("UICorner"); indCorner.CornerRadius = UDim.new(1,0); indCorner.Parent = Indicator
+
+
+--- Line 2826 ---
+2824: Indicator.BackgroundColor3 = UI_THEME.Accent
+2825: Indicator.BorderSizePixel = 0
+2826: Indicator.BackgroundTransparency = 1
+2827: Indicator.Parent = TabButton
+2828: local indCorner = Instance.new("UICorner"); indCorner.CornerRadius = UDim.new(1,0); indCorner.Parent = Indicator
+2829: 
+
+
+--- Line 2827 ---
+2825: Indicator.BorderSizePixel = 0
+2826: Indicator.BackgroundTransparency = 1
+2827: Indicator.Parent = TabButton
+2828: local indCorner = Instance.new("UICorner"); indCorner.CornerRadius = UDim.new(1,0); indCorner.Parent = Indicator
+2829: 
+2830: local Page = Instance.new("ScrollingFrame")
+
+
+--- Line 2828 ---
+2826: Indicator.BackgroundTransparency = 1
+2827: Indicator.Parent = TabButton
+2828: local indCorner = Instance.new("UICorner"); indCorner.CornerRadius = UDim.new(1,0); indCorner.Parent = Indicator
+2829: 
+2830: local Page = Instance.new("ScrollingFrame")
+2831: Page.Name = name .. "Page"
+
+
+--- Line 2857 ---
+2855: for _, t in pairs(UIState.Tabs) do
+2856: TweenService:Create(t.Label, TWEENS.MEDIUM, {TextColor3 = UI_THEME.TextDark}):Play()
+2857: TweenService:Create(t.Indicator, TWEENS.MEDIUM, {BackgroundTransparency = 1}):Play()
+2858: t.Page.Visible = false
+2859: end
+2860: 
+
+
+--- Line 2862 ---
+2860: 
+2861: TweenService:Create(TabLabel, TWEENS.MEDIUM, {TextColor3 = UI_THEME.Text}):Play()
+2862: TweenService:Create(Indicator, TWEENS.MEDIUM, {BackgroundTransparency = 0}):Play()
+2863: Page.Visible = true
+2864: UIState.CurrentTab = name
+2865: end
+
+
+--- Line 2869 ---
+2867: TrackConnection(TabButton.MouseButton1Click:Connect(SelectTab))
+2868: 
+2869: table.insert(UIState.Tabs, {Button = TabButton, Label = TabLabel, Indicator = Indicator, Page = Page, Select = SelectTab})
+2870: 
+2871: if #UIState.Tabs == 1 then
+2872: SelectTab()
+
+
+--- Line 3684 ---
+3682: table.clear(_hoistedCheckParts)
+3683: local anySelected = false
+3684: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+3685: if enabled then
+3686: anySelected = true
+3687: for _, partName in ipairs(TARGET_GROUPS[category]) do
+
+
+--- Line 3687 ---
+3685: if enabled then
+3686: anySelected = true
+3687: for _, partName in ipairs(TARGET_GROUPS[category]) do
+3688: table.insert(_hoistedCheckParts, partName)
+3689: end
+3690: end
+
+
+--- Line 3792 ---
+3790: local Magnitude = sqrt(dx * dx + dy * dy)
+3791: 
+3792: local bypassBlacklistPriority = false
+3793: if isBlacklisted and Flags["Aim/BypassBlacklistPriorityIfOccludedOrFar"] then
+3794: local isOccluded = ObjectOccluded(VisibilityCheck, CameraPosition, ActualPosition, Character)
+3795: local isFar = Distance > Flags["Aim/BlacklistBypassDistance"]
+
+
+--- Line 3793 ---
+3791: 
+3792: local bypassBlacklistPriority = false
+3793: if isBlacklisted and Flags["Aim/BypassBlacklistPriorityIfOccludedOrFar"] then
+3794: local isOccluded = ObjectOccluded(VisibilityCheck, CameraPosition, ActualPosition, Character)
+3795: local isFar = Distance > Flags["Aim/BlacklistBypassDistance"]
+3796: if isOccluded or isFar then
+
+
+--- Line 3795 ---
+3793: if isBlacklisted and Flags["Aim/BypassBlacklistPriorityIfOccludedOrFar"] then
+3794: local isOccluded = ObjectOccluded(VisibilityCheck, CameraPosition, ActualPosition, Character)
+3795: local isFar = Distance > Flags["Aim/BlacklistBypassDistance"]
+3796: if isOccluded or isFar then
+3797: bypassBlacklistPriority = true
+3798: end
+
+
+--- Line 3797 ---
+3795: local isFar = Distance > Flags["Aim/BlacklistBypassDistance"]
+3796: if isOccluded or isFar then
+3797: bypassBlacklistPriority = true
+3798: end
+3799: end
+3800: 
+
+
+--- Line 3804 ---
+3802: if priorityRank then
+3803: Magnitude = Magnitude - (30000 - priorityRank * 100)
+3804: elseif isBlacklisted and not bypassBlacklistPriority then
+3805: Magnitude = Magnitude - 10000
+3806: end
+3807: 
+
+
+--- Line 4296 ---
+4294: else
+4295: if TrackerNameLabel then
+4296: TrackerNameLabel.Text = "No players nearby"
+4297: TrackerNameLabel.TextColor3 = COLORS.NORMAL
+4298: end
+4299: NearestPlayerRef = nil
+
+
+--- Line 4875 ---
+4873: Camera.CameraSubject = myHum
+4874: end
+4875: LocalPlayer.ReplicationFocus = nil
+4876: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+4877: UI.Notify("Player Explorer", "Stopped spectating " .. player.Name .. ".", 3)
+4878: else
+
+
+--- Line 4876 ---
+4874: end
+4875: LocalPlayer.ReplicationFocus = nil
+4876: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+4877: UI.Notify("Player Explorer", "Stopped spectating " .. player.Name .. ".", 3)
+4878: else
+4879: if targetHum then
+
+
+--- Line 4883 ---
+4881: Camera.CameraSubject = targetHum
+4882: if targetRoot then
+4883: LocalPlayer.ReplicationFocus = targetRoot
+4884: end
+4885: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(false) end)
+4886: UI.Notify("Player Explorer", "Now spectating " .. player.Name .. ".", 3)
+
+
+--- Line 4885 ---
+4883: LocalPlayer.ReplicationFocus = targetRoot
+4884: end
+4885: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(false) end)
+4886: UI.Notify("Player Explorer", "Now spectating " .. player.Name .. ".", 3)
+4887: else
+4888: UI.Notify("Player Explorer", "Failed to spectate: target humanoid not found.", 3)
+
+
+--- Line 5082 ---
+5080: detailsTabLayout.Parent = detailsTabFrame
+5081: 
+5082: local function CreateDetailsTab(name, label)
+5083: local btn = Instance.new("TextButton")
+5084: btn.Name = name .. "_DetailsTab"
+5085: btn.Size = UDim2.new(0.33, -3, 1, 0)
+
+
+--- Line 5111 ---
+5109: end
+5110: 
+5111: CreateDetailsTab("General", "General")
+5112: CreateDetailsTab("Player", "Player")
+5113: CreateDetailsTab("Workspace", "Workspace")
+5114: 
+
+
+--- Line 5112 ---
+5110: 
+5111: CreateDetailsTab("General", "General")
+5112: CreateDetailsTab("Player", "Player")
+5113: CreateDetailsTab("Workspace", "Workspace")
+5114: 
+5115: local detailsContent = Instance.new("ScrollingFrame")
+
+
+--- Line 5113 ---
+5111: CreateDetailsTab("General", "General")
+5112: CreateDetailsTab("Player", "Player")
+5113: CreateDetailsTab("Workspace", "Workspace")
+5114: 
+5115: local detailsContent = Instance.new("ScrollingFrame")
+5116: detailsContent.Name = "DetailsContent"
+
+
+--- Line 5289 ---
+5287: UI.CreateSection(settingsContent, "Targeting Rules for blacklisted (☠️) players")
+5288: UI.CreateToggle(settingsContent, "Target Blacklisted Through Terrain", "Aim/TargetBlacklistedThroughTerrain", Flags["Aim/TargetBlacklistedThroughTerrain"])
+5289: UI.CreateToggle(settingsContent, "Bypass Blacklist Priority If Occluded/Far", "Aim/BypassBlacklistPriorityIfOccludedOrFar", Flags["Aim/BypassBlacklistPriorityIfOccludedOrFar"])
+5290: UI.CreateNumericInput(settingsContent, "Blacklist Bypass Distance", "Aim/BlacklistBypassDistance", Flags["Aim/BlacklistBypassDistance"], 0, 10000, 10, "studs")
+5291: 
+5292: UI.CreateSection(settingsContent, "Target Prioritization (⭐) List")
+
+
+--- Line 5290 ---
+5288: UI.CreateToggle(settingsContent, "Target Blacklisted Through Terrain", "Aim/TargetBlacklistedThroughTerrain", Flags["Aim/TargetBlacklistedThroughTerrain"])
+5289: UI.CreateToggle(settingsContent, "Bypass Blacklist Priority If Occluded/Far", "Aim/BypassBlacklistPriorityIfOccludedOrFar", Flags["Aim/BypassBlacklistPriorityIfOccludedOrFar"])
+5290: UI.CreateNumericInput(settingsContent, "Blacklist Bypass Distance", "Aim/BlacklistBypassDistance", Flags["Aim/BlacklistBypassDistance"], 0, 10000, 10, "studs")
+5291: 
+5292: UI.CreateSection(settingsContent, "Target Prioritization (⭐) List")
+5293: 
+
+
+--- Line 5916 ---
+5914: local lockedProps = ItemPanelState.lockedProperties[path] or {}
+5915: 
+5916: local categories = {"Data", "Appearance", "Behavior", "Stats", "Transform"}
+5917: 
+5918: for _, catName in ipairs(categories) do
+5919: local catProps = PROPERTY_CATEGORIES[catName]
+
+
+--- Line 5918 ---
+5916: local categories = {"Data", "Appearance", "Behavior", "Stats", "Transform"}
+5917: 
+5918: for _, catName in ipairs(categories) do
+5919: local catProps = PROPERTY_CATEGORIES[catName]
+5920: local catHasAny = false
+5921: 
+
+
+--- Line 5919 ---
+5917: 
+5918: for _, catName in ipairs(categories) do
+5919: local catProps = PROPERTY_CATEGORIES[catName]
+5920: local catHasAny = false
+5921: 
+5922: for _, prop in ipairs(catProps) do
+
+
+--- Line 5920 ---
+5918: for _, catName in ipairs(categories) do
+5919: local catProps = PROPERTY_CATEGORIES[catName]
+5920: local catHasAny = false
+5921: 
+5922: for _, prop in ipairs(catProps) do
+5923: if searchText == "" or prop:lower():find(searchText) then
+
+
+--- Line 5922 ---
+5920: local catHasAny = false
+5921: 
+5922: for _, prop in ipairs(catProps) do
+5923: if searchText == "" or prop:lower():find(searchText) then
+5924: local success, val = pcall(function() return instance[prop] end)
+5925: if success and val ~= nil then
+
+
+--- Line 5926 ---
+5924: local success, val = pcall(function() return instance[prop] end)
+5925: if success and val ~= nil then
+5926: catHasAny = true
+5927: break
+5928: end
+5929: end
+
+
+--- Line 5932 ---
+5930: end
+5931: 
+5932: if catHasAny then
+5933: local catHeader = Instance.new("Frame")
+5934: catHeader.Size = UDim2.new(1, 0, 0, 20)
+5935: catHeader.BackgroundTransparency = 1
+
+
+--- Line 5933 ---
+5931: 
+5932: if catHasAny then
+5933: local catHeader = Instance.new("Frame")
+5934: catHeader.Size = UDim2.new(1, 0, 0, 20)
+5935: catHeader.BackgroundTransparency = 1
+5936: catHeader.Parent = content
+
+
+--- Line 5934 ---
+5932: if catHasAny then
+5933: local catHeader = Instance.new("Frame")
+5934: catHeader.Size = UDim2.new(1, 0, 0, 20)
+5935: catHeader.BackgroundTransparency = 1
+5936: catHeader.Parent = content
+5937: 
+
+
+--- Line 5935 ---
+5933: local catHeader = Instance.new("Frame")
+5934: catHeader.Size = UDim2.new(1, 0, 0, 20)
+5935: catHeader.BackgroundTransparency = 1
+5936: catHeader.Parent = content
+5937: 
+5938: local catLabel = Instance.new("TextLabel")
+
+
+--- Line 5936 ---
+5934: catHeader.Size = UDim2.new(1, 0, 0, 20)
+5935: catHeader.BackgroundTransparency = 1
+5936: catHeader.Parent = content
+5937: 
+5938: local catLabel = Instance.new("TextLabel")
+5939: catLabel.Size = UDim2.new(1, -10, 1, 0)
+
+
+--- Line 5938 ---
+5936: catHeader.Parent = content
+5937: 
+5938: local catLabel = Instance.new("TextLabel")
+5939: catLabel.Size = UDim2.new(1, -10, 1, 0)
+5940: catLabel.Position = UDim2.fromOffset(5, 0)
+5941: catLabel.BackgroundTransparency = 1
+
+
+--- Line 5939 ---
+5937: 
+5938: local catLabel = Instance.new("TextLabel")
+5939: catLabel.Size = UDim2.new(1, -10, 1, 0)
+5940: catLabel.Position = UDim2.fromOffset(5, 0)
+5941: catLabel.BackgroundTransparency = 1
+5942: catLabel.Text = "v " .. catName
+
+
+--- Line 5940 ---
+5938: local catLabel = Instance.new("TextLabel")
+5939: catLabel.Size = UDim2.new(1, -10, 1, 0)
+5940: catLabel.Position = UDim2.fromOffset(5, 0)
+5941: catLabel.BackgroundTransparency = 1
+5942: catLabel.Text = "v " .. catName
+5943: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+
+
+--- Line 5941 ---
+5939: catLabel.Size = UDim2.new(1, -10, 1, 0)
+5940: catLabel.Position = UDim2.fromOffset(5, 0)
+5941: catLabel.BackgroundTransparency = 1
+5942: catLabel.Text = "v " .. catName
+5943: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+5944: catLabel.TextSize = 11
+
+
+--- Line 5942 ---
+5940: catLabel.Position = UDim2.fromOffset(5, 0)
+5941: catLabel.BackgroundTransparency = 1
+5942: catLabel.Text = "v " .. catName
+5943: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+5944: catLabel.TextSize = 11
+5945: catLabel.TextColor3 = UI_THEME.TextDark
+
+
+--- Line 5943 ---
+5941: catLabel.BackgroundTransparency = 1
+5942: catLabel.Text = "v " .. catName
+5943: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+5944: catLabel.TextSize = 11
+5945: catLabel.TextColor3 = UI_THEME.TextDark
+5946: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+
+--- Line 5944 ---
+5942: catLabel.Text = "v " .. catName
+5943: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+5944: catLabel.TextSize = 11
+5945: catLabel.TextColor3 = UI_THEME.TextDark
+5946: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+5947: catLabel.Parent = catHeader
+
+
+--- Line 5945 ---
+5943: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+5944: catLabel.TextSize = 11
+5945: catLabel.TextColor3 = UI_THEME.TextDark
+5946: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+5947: catLabel.Parent = catHeader
+5948: 
+
+
+--- Line 5946 ---
+5944: catLabel.TextSize = 11
+5945: catLabel.TextColor3 = UI_THEME.TextDark
+5946: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+5947: catLabel.Parent = catHeader
+5948: 
+5949: for _, prop in ipairs(catProps) do
+
+
+--- Line 5947 ---
+5945: catLabel.TextColor3 = UI_THEME.TextDark
+5946: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+5947: catLabel.Parent = catHeader
+5948: 
+5949: for _, prop in ipairs(catProps) do
+5950: if searchText == "" or prop:lower():find(searchText) then
+
+
+--- Line 5949 ---
+5947: catLabel.Parent = catHeader
+5948: 
+5949: for _, prop in ipairs(catProps) do
+5950: if searchText == "" or prop:lower():find(searchText) then
+5951: local success, val = pcall(function() return instance[prop] end)
+5952: if success and val ~= nil then
+
+
+--- Line 6058 ---
+6056: local currentPropRows = {}
+6057: local searchText = AdvancedPlayerPanelState.PropertySearchText
+6058: local categories = {"Data", "Appearance", "Behavior", "Stats", "Transform"}
+6059: local orderCounter = 0
+6060: 
+6061: for _, catName in ipairs(categories) do
+
+
+--- Line 6061 ---
+6059: local orderCounter = 0
+6060: 
+6061: for _, catName in ipairs(categories) do
+6062: local catProps = PROPERTY_CATEGORIES[catName]
+6063: local catHasAny = false
+6064: 
+
+
+--- Line 6062 ---
+6060: 
+6061: for _, catName in ipairs(categories) do
+6062: local catProps = PROPERTY_CATEGORIES[catName]
+6063: local catHasAny = false
+6064: 
+6065: for _, prop in ipairs(catProps) do
+
+
+--- Line 6063 ---
+6061: for _, catName in ipairs(categories) do
+6062: local catProps = PROPERTY_CATEGORIES[catName]
+6063: local catHasAny = false
+6064: 
+6065: for _, prop in ipairs(catProps) do
+6066: if searchText == "" or prop:lower():find(searchText) then
+
+
+--- Line 6065 ---
+6063: local catHasAny = false
+6064: 
+6065: for _, prop in ipairs(catProps) do
+6066: if searchText == "" or prop:lower():find(searchText) then
+6067: local success, val = pcall(function() return instance[prop] end)
+6068: if success and val ~= nil then
+
+
+--- Line 6069 ---
+6067: local success, val = pcall(function() return instance[prop] end)
+6068: if success and val ~= nil then
+6069: catHasAny = true
+6070: break
+6071: end
+6072: end
+
+
+--- Line 6075 ---
+6073: end
+6074: 
+6075: if catHasAny then
+6076: orderCounter = orderCounter + 1
+6077: local catHeaderId = "Cat_" .. catName
+6078: currentPropRows[catHeaderId] = true
+
+
+--- Line 6077 ---
+6075: if catHasAny then
+6076: orderCounter = orderCounter + 1
+6077: local catHeaderId = "Cat_" .. catName
+6078: currentPropRows[catHeaderId] = true
+6079: local catHeader = AdvancedPlayerPanelState.PropertyRowCache[catHeaderId]
+6080: 
+
+
+--- Line 6078 ---
+6076: orderCounter = orderCounter + 1
+6077: local catHeaderId = "Cat_" .. catName
+6078: currentPropRows[catHeaderId] = true
+6079: local catHeader = AdvancedPlayerPanelState.PropertyRowCache[catHeaderId]
+6080: 
+6081: if not catHeader then
+
+
+--- Line 6079 ---
+6077: local catHeaderId = "Cat_" .. catName
+6078: currentPropRows[catHeaderId] = true
+6079: local catHeader = AdvancedPlayerPanelState.PropertyRowCache[catHeaderId]
+6080: 
+6081: if not catHeader then
+6082: catHeader = Instance.new("Frame")
+
+
+--- Line 6081 ---
+6079: local catHeader = AdvancedPlayerPanelState.PropertyRowCache[catHeaderId]
+6080: 
+6081: if not catHeader then
+6082: catHeader = Instance.new("Frame")
+6083: catHeader.Size = UDim2.new(1, 0, 0, 20)
+6084: catHeader.BackgroundTransparency = 1
+
+
+--- Line 6082 ---
+6080: 
+6081: if not catHeader then
+6082: catHeader = Instance.new("Frame")
+6083: catHeader.Size = UDim2.new(1, 0, 0, 20)
+6084: catHeader.BackgroundTransparency = 1
+6085: catHeader.Parent = content
+
+
+--- Line 6083 ---
+6081: if not catHeader then
+6082: catHeader = Instance.new("Frame")
+6083: catHeader.Size = UDim2.new(1, 0, 0, 20)
+6084: catHeader.BackgroundTransparency = 1
+6085: catHeader.Parent = content
+6086: AdvancedPlayerPanelState.PropertyRowCache[catHeaderId] = catHeader
+
+
+--- Line 6084 ---
+6082: catHeader = Instance.new("Frame")
+6083: catHeader.Size = UDim2.new(1, 0, 0, 20)
+6084: catHeader.BackgroundTransparency = 1
+6085: catHeader.Parent = content
+6086: AdvancedPlayerPanelState.PropertyRowCache[catHeaderId] = catHeader
+6087: 
+
+
+--- Line 6085 ---
+6083: catHeader.Size = UDim2.new(1, 0, 0, 20)
+6084: catHeader.BackgroundTransparency = 1
+6085: catHeader.Parent = content
+6086: AdvancedPlayerPanelState.PropertyRowCache[catHeaderId] = catHeader
+6087: 
+6088: local catLabel = Instance.new("TextLabel")
+
+
+--- Line 6086 ---
+6084: catHeader.BackgroundTransparency = 1
+6085: catHeader.Parent = content
+6086: AdvancedPlayerPanelState.PropertyRowCache[catHeaderId] = catHeader
+6087: 
+6088: local catLabel = Instance.new("TextLabel")
+6089: catLabel.Name = "CatLabel"
+
+
+--- Line 6088 ---
+6086: AdvancedPlayerPanelState.PropertyRowCache[catHeaderId] = catHeader
+6087: 
+6088: local catLabel = Instance.new("TextLabel")
+6089: catLabel.Name = "CatLabel"
+6090: catLabel.Size = UDim2.new(1, -10, 1, 0)
+6091: catLabel.Position = UDim2.fromOffset(5, 0)
+
+
+--- Line 6089 ---
+6087: 
+6088: local catLabel = Instance.new("TextLabel")
+6089: catLabel.Name = "CatLabel"
+6090: catLabel.Size = UDim2.new(1, -10, 1, 0)
+6091: catLabel.Position = UDim2.fromOffset(5, 0)
+6092: catLabel.BackgroundTransparency = 1
+
+
+--- Line 6090 ---
+6088: local catLabel = Instance.new("TextLabel")
+6089: catLabel.Name = "CatLabel"
+6090: catLabel.Size = UDim2.new(1, -10, 1, 0)
+6091: catLabel.Position = UDim2.fromOffset(5, 0)
+6092: catLabel.BackgroundTransparency = 1
+6093: catLabel.Text = "v " .. catName
+
+
+--- Line 6091 ---
+6089: catLabel.Name = "CatLabel"
+6090: catLabel.Size = UDim2.new(1, -10, 1, 0)
+6091: catLabel.Position = UDim2.fromOffset(5, 0)
+6092: catLabel.BackgroundTransparency = 1
+6093: catLabel.Text = "v " .. catName
+6094: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+
+
+--- Line 6092 ---
+6090: catLabel.Size = UDim2.new(1, -10, 1, 0)
+6091: catLabel.Position = UDim2.fromOffset(5, 0)
+6092: catLabel.BackgroundTransparency = 1
+6093: catLabel.Text = "v " .. catName
+6094: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+6095: catLabel.TextSize = 11
+
+
+--- Line 6093 ---
+6091: catLabel.Position = UDim2.fromOffset(5, 0)
+6092: catLabel.BackgroundTransparency = 1
+6093: catLabel.Text = "v " .. catName
+6094: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+6095: catLabel.TextSize = 11
+6096: catLabel.TextColor3 = UI_THEME.TextDark
+
+
+--- Line 6094 ---
+6092: catLabel.BackgroundTransparency = 1
+6093: catLabel.Text = "v " .. catName
+6094: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+6095: catLabel.TextSize = 11
+6096: catLabel.TextColor3 = UI_THEME.TextDark
+6097: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+
+--- Line 6095 ---
+6093: catLabel.Text = "v " .. catName
+6094: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+6095: catLabel.TextSize = 11
+6096: catLabel.TextColor3 = UI_THEME.TextDark
+6097: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+6098: catLabel.Parent = catHeader
+
+
+--- Line 6096 ---
+6094: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+6095: catLabel.TextSize = 11
+6096: catLabel.TextColor3 = UI_THEME.TextDark
+6097: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+6098: catLabel.Parent = catHeader
+6099: end
+
+
+--- Line 6097 ---
+6095: catLabel.TextSize = 11
+6096: catLabel.TextColor3 = UI_THEME.TextDark
+6097: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+6098: catLabel.Parent = catHeader
+6099: end
+6100: catHeader.LayoutOrder = orderCounter
+
+
+--- Line 6098 ---
+6096: catLabel.TextColor3 = UI_THEME.TextDark
+6097: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+6098: catLabel.Parent = catHeader
+6099: end
+6100: catHeader.LayoutOrder = orderCounter
+6101: 
+
+
+--- Line 6100 ---
+6098: catLabel.Parent = catHeader
+6099: end
+6100: catHeader.LayoutOrder = orderCounter
+6101: 
+6102: for _, prop in ipairs(catProps) do
+6103: if searchText == "" or prop:lower():find(searchText) then
+
+
+--- Line 6102 ---
+6100: catHeader.LayoutOrder = orderCounter
+6101: 
+6102: for _, prop in ipairs(catProps) do
+6103: if searchText == "" or prop:lower():find(searchText) then
+6104: local success, val = pcall(function() return instance[prop] end)
+6105: if success and val ~= nil then
+
+
+--- Line 6508 ---
+6506: creationDate = os.date("%x", t)
+6507: end)
+6508: createLabel("Account Created", creationDate)
+6509: createLabel("Mutual Friends", "N/A")
+6510: createLabel("Is Friend", LocalPlayer:IsFriendsWith(player.UserId) and "Yes" or "No")
+6511: 
+
+
+--- Line 6959 ---
+6957: if Flags["Aim/ShowAssistDots"] then
+6958: local anySelected = false
+6959: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+6960: if enabled then
+6961: anySelected = true
+6962: for _, partName in ipairs(TARGET_GROUPS[category]) do
+
+
+--- Line 6962 ---
+6960: if enabled then
+6961: anySelected = true
+6962: for _, partName in ipairs(TARGET_GROUPS[category]) do
+6963: table.insert(dotParts, partName)
+6964: end
+6965: end
+
+
+--- Line 7283 ---
+7281: local healthVisible = not isOccluded
+7282: 
+7283: local settingEnabled = Flags["ESP/HealthIndicator"]
+7284: 
+7285: if espData.HealthBarContainer and espData.HealthBarContainer.Visible ~= (healthVisible and settingEnabled) then
+7286: espData.HealthBarContainer.Visible = healthVisible and settingEnabled
+
+
+--- Line 7343 ---
+7341: local D3vToolLabel = nil
+7342: 
+7343: function CreateD3vToolHUD(parent)
+7344: D3vToolHUD = Instance.new("Frame")
+7345: D3vToolHUD.Name = "D3vToolHUD"
+7346: D3vToolHUD.Position = UDim2.new(1, -450, 0, 3)
+
+
+--- Line 7395 ---
+7393: end
+7394: 
+7395: local mouseLoc = UserInputService:GetMouseLocation()
+7396: local lmcStr = string.format("%d,%d", floor(mouseLoc.X), floor(mouseLoc.Y))
+7397: 
+7398: local newText = string.format("WorldTime[%s] Humanoid[%s] Mouse[%s]", timeStr, lpcStr, lmcStr)
+
+
+--- Line 7592 ---
+7590: if not LocalHealthValueLabel or not LocalHealthHUD then return end
+7591: 
+7592: if not Flags["LocalUI/LocalHealthIndicator"] then
+7593: if LocalHealthHUD.Visible then LocalHealthHUD.Visible = false end
+7594: return
+7595: else
+
+
+--- Line 8601 ---
+8599: ItemPanelUI.PropertySearch = nil
+8600: 
+8601: LocalPlayer.ReplicationFocus = nil
+8602: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+8603: 
+8604: table.clear(PathCache)
+
+
+--- Line 8602 ---
+8600: 
+8601: LocalPlayer.ReplicationFocus = nil
+8602: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+8603: 
+8604: table.clear(PathCache)
+8605: table.clear(ViewportCache)
+
+
+--- Line 8675 ---
+8673: {Text = "R", Key = "R", Width = 1, KeyCode = Enum.KeyCode.R, Name = "Rejoin / Reload", Action = "Ctrl+R / Ctrl+Shift+R", Desc = "Rejoins server, or unloads and reloads script from GitHub (with Shift)."},
+8674: {Text = "T", Width = 1},
+8675: {Text = "Y", Key = "Y", Width = 1, KeyCode = Enum.KeyCode.Y, Name = "Waypoint Teleport", Action = "Ctrl + Y", Desc = "Teleports player to the most recently created active waypoint."},
+8676: {Text = "U", Key = "U", Width = 1, KeyCode = Enum.KeyCode.U, Name = "Unload Script", Action = "Ctrl + U", Desc = "Unloads the script, removes all UI elements, and cleans up connections."},
+8677: {Text = "I", Width = 1},
+8678: {Text = "O", Width = 1},
+
+
+--- Line 8711 ---
+8709: {Text = "M", Width = 1},
+8710: {Text = ",", Width = 1},
+8711: {Text = ".", Key = "Period", Width = 1, KeyCode = Enum.KeyCode.Period, Name = "Toggle Dev Tool", Action = "Ctrl + .", Desc = "Toggles developer HUD panels / D3vTool.", StatusKey = "Misc/D3vTool"},
+8712: {Text = "/", Width = 1},
+8713: {Text = "shift", Width = 1.75},
+8714: {Text = "↑", Key = "Up", Width = 1, KeyCode = Enum.KeyCode.Up, Name = "Position Force Up / Forward", Action = "Ctrl+Up / Ctrl+Shift+Up", Desc = "Forces character position up or forward by the configured distance."},
+
+
+--- Line 8714 ---
+8712: {Text = "/", Width = 1},
+8713: {Text = "shift", Width = 1.75},
+8714: {Text = "↑", Key = "Up", Width = 1, KeyCode = Enum.KeyCode.Up, Name = "Position Force Up / Forward", Action = "Ctrl+Up / Ctrl+Shift+Up", Desc = "Forces character position up or forward by the configured distance."},
+8715: {Text = "ins", Width = 1}
+8716: },
+8717: {
+
+
+--- Line 8725 ---
+8723: {Text = "fn", Width = 1.25},
+8724: {Text = "ctrl", Width = 1.25},
+8725: {Text = "←", Key = "Left", Width = 1, KeyCode = Enum.KeyCode.Left, Name = "Position Force Left", Action = "Ctrl + Left", Desc = "Forces character position left by the configured distance."},
+8726: {Text = "↓", Key = "Down", Width = 1, KeyCode = Enum.KeyCode.Down, Name = "Position Force Down / Backward", Action = "Ctrl+Down / Ctrl+Shift+Down", Desc = "Forces character position down or backward by the configured distance."},
+8727: {Text = "→", Key = "Right", Width = 1, KeyCode = Enum.KeyCode.Right, Name = "Position Force Right", Action = "Ctrl + Right", Desc = "Forces character position right by the configured distance."}
+8728: }
+
+
+--- Line 8726 ---
+8724: {Text = "ctrl", Width = 1.25},
+8725: {Text = "←", Key = "Left", Width = 1, KeyCode = Enum.KeyCode.Left, Name = "Position Force Left", Action = "Ctrl + Left", Desc = "Forces character position left by the configured distance."},
+8726: {Text = "↓", Key = "Down", Width = 1, KeyCode = Enum.KeyCode.Down, Name = "Position Force Down / Backward", Action = "Ctrl+Down / Ctrl+Shift+Down", Desc = "Forces character position down or backward by the configured distance."},
+8727: {Text = "→", Key = "Right", Width = 1, KeyCode = Enum.KeyCode.Right, Name = "Position Force Right", Action = "Ctrl + Right", Desc = "Forces character position right by the configured distance."}
+8728: }
+8729: }
+
+
+--- Line 8727 ---
+8725: {Text = "←", Key = "Left", Width = 1, KeyCode = Enum.KeyCode.Left, Name = "Position Force Left", Action = "Ctrl + Left", Desc = "Forces character position left by the configured distance."},
+8726: {Text = "↓", Key = "Down", Width = 1, KeyCode = Enum.KeyCode.Down, Name = "Position Force Down / Backward", Action = "Ctrl+Down / Ctrl+Shift+Down", Desc = "Forces character position down or backward by the configured distance."},
+8727: {Text = "→", Key = "Right", Width = 1, KeyCode = Enum.KeyCode.Right, Name = "Position Force Right", Action = "Ctrl + Right", Desc = "Forces character position right by the configured distance."}
+8728: }
+8729: }
+8730: 
+
+
+--- Line 8781 ---
+8779: legendLabel.Text = "• Teal Keys/Buttons: Have active game shortcuts assigned.\n" ..
+8780: "• Gray Keys/Buttons: Standard keyboard layout (no shortcut).\n" ..
+8781: "• Toggles (Active/Inactive): Features like Fullbright (Ctrl+F) or Dev Tool (Ctrl+.) show active/inactive state inside the tooltip popup in real-time.\n" ..
+8782: "• Modifiers (Ctrl/Shift): Hold these keys in game to execute actions.\n" ..
+8783: "• Hover over any highlighted key/button to view its detailed shortcut function."
+8784: legendLabel.Parent = page
+
+
+--- Line 9149 ---
+9147: local Window = UI.CreateWindow("Sp3arParvus")
+9148: 
+9149: CreateD3vToolHUD(ScreenGui)
+9150: CreatePerformanceDisplay(ScreenGui)
+9151: CreateLocalHealthHUD(ScreenGui)
+9152: CreateClosestPlayerTracker()
+
+
+--- Line 9160 ---
+9158: local PlayerPage = UI.CreateTab("PlayerPage")
+9159: InitializePlayerPage(PlayerPage)
+9160: local MiscTab = UI.CreateTab("Dev Tools")
+9161: local ShortcutsTab = UI.CreateTab("Shortcuts")
+9162: InitializeShortcutsPage(ShortcutsTab)
+9163: 
+
+
+--- Line 9185 ---
+9183: end
+9184: 
+9185: UI.CreateSection(page, "Nearby Humanoids")
+9186: 
+9187: local refreshBtn = Instance.new("TextButton")
+9188: refreshBtn.Size = UDim2.new(1, 0, 0, 30)
+
+
+--- Line 9200 ---
+9198: end))
+9199: 
+9200: local humanoids = GetNearbyHumanoids()
+9201: if #humanoids == 0 then
+9202: local lbl = Instance.new("TextLabel")
+9203: lbl.Size = UDim2.new(1, 0, 0, 30)
+
+
+--- Line 9353 ---
+9351: UI.Notify("Teleport", "Teleported to " .. model.Name)
+9352: else
+9353: UI.Notify("Teleport Error", "Target humanoid location could not be determined.")
+9354: end
+9355: end))
+9356: end
+
+
+--- Line 9607 ---
+9605: UI.Notify("Teleport", "Teleported to " .. hum.Parent.Name)
+9606: else
+9607: UI.Notify("Teleport Error", "Target humanoid location could not be determined.")
+9608: end
+9609: end))
+9610: 
+
+
+--- Line 9684 ---
+9682: UI.CreateToggle(AimTab, "Ignore Teammates", "Aim/TeamCheck", Flags["Aim/TeamCheck"])
+9683: UI.CreateToggle(AimTab, "Visibility Check (Raycast)", "Aim/VisibilityCheck", Flags["Aim/VisibilityCheck"])
+9684: UI.CreateToggle(AimTab, "Show Tracking Indicator Dots", "Aim/ShowAssistDots", Flags["Aim/ShowAssistDots"])
+9685: UI.CreateNumericInput(AimTab, "Attraction Strength", "Aim/AttractionStrength", Flags["Aim/AttractionStrength"], 0, 500, 10, "%")
+9686: UI.CreateNumericInput(AimTab, "FOV Radius", "Aim/FOV/Radius", Flags["Aim/FOV/Radius"], 0, 500, 5, "px")
+9687: UI.CreateToggle(AimTab, "Show FOV Circle", "Aim/FOV/ShowCircle", Flags["Aim/FOV/ShowCircle"])
+
+
+--- Line 9855 ---
+9853: UI.CreateToggle(VisualsTab, "Draw Username", "ESP/ShowUsername", Flags["ESP/ShowUsername"])
+9854: UI.CreateToggle(VisualsTab, "Draw Distance", "ESP/ShowDistance", Flags["ESP/ShowDistance"])
+9855: UI.CreateToggle(VisualsTab, "Draw Health Indicator", "ESP/HealthIndicator", Flags["ESP/HealthIndicator"])
+9856: UI.CreateToggle(VisualsTab, "Draw Equipped Item", "ESP/ShowEquipped", Flags["ESP/ShowEquipped"])
+9857: UI.CreateNumericInput(VisualsTab, "Nametag Opacity", "ESP/NametagOpacity", Flags["ESP/NametagOpacity"], 0, 100, 5, "%", function(val)
+9858: UpdateAllNametagOpacities()
+
+
+--- Line 9877 ---
+9875: if PerformanceLabel then PerformanceLabel.Visible = state end
+9876: end)
+9877: UI.CreateToggle(VisualsTab, "Show Local Health Indicator", "LocalUI/LocalHealthIndicator", Flags["LocalUI/LocalHealthIndicator"], function(state)
+9878: if LocalHealthHUD then LocalHealthHUD.Visible = state end
+9879: end)
+9880: UI.CreateToggle(VisualsTab, "Show Closest Player Tracker", "LocalUI/ClosestPlayerTracker", Flags["LocalUI/ClosestPlayerTracker"], function(state)
+
+
+--- Line 9965 ---
+9963: local LiveLightingUpdaters = {}
+9964: 
+9965: -- Helper: create a numeric input that reads/writes directly to Services.Lighting
+9966: -- getter()  -> current numeric value
+9967: -- setter(v) -> applies v to the world immediately
+9968: local function MakeLiveLightingNumeric(labelText, key, getter, setter, minV, maxV, stepV, unit)
+
+
+--- Line 9982 ---
+9980: end
+9981: 
+9982: -- Helper: create a toggle that reads/writes a boolean property on Services.Lighting
+9983: local function MakeLiveLightingToggle(labelText, key, getter, setter)
+9984: local currentVal = getter()
+9985: UI.CreateToggle(VisualsTab, labelText, "LiveLight/" .. key, currentVal,
+
+
+--- Line 10417 ---
+10415: UI.Notify("Game Join Link", "Game join link has been copied to clipboard", 5)
+10416: else
+10417: UI.Notify("Game Join Link", "Clipboard function not supported by your exploit", 5)
+10418: end
+10419: end)
+10420: UI.CreateButton(MiscTab, "Unload Script", Cleanup)
+
+
+--- Line 10503 ---
+10501: UI.Notify("Discord", "Discord invite link has been copied to clipboard", 5)
+10502: else
+10503: UI.Notify("Discord", "Clipboard function not supported by your exploit", 5)
+10504: end
+10505: 
+10506: local req = syn and syn.request or http and http.request or http_request or request
+
+
+--- Line 10513 ---
+10511: Method = "POST",
+10512: Headers = {
+10513: ["Content-Type"] = "application/json",
+10514: ["Origin"] = "https://discord.com"
+10515: },
+10516: Body = game:GetService("HttpService"):JSONEncode({
+
+
+--- Line 10711 ---
+10709: else
+10710: 
+10711: local mouseLoc = UserInputService:GetMouseLocation()
+10712: local origin, direction = GetMouseRay()
+10713: local raycastHit = nil
+10714: if origin and direction then
+
+
+--- Line 10973 ---
+10971: Flags["Misc/D3vTool"] = not Flags["Misc/D3vTool"]
+10972: local state = Flags["Misc/D3vTool"]
+10973: UI.Notify("Dev Tool", string.format("Dev Tool has been %s with 'Ctrl+.'", state and "activated" or "deactivated"))
+10974: return Enum.ContextActionResult.Sink
+10975: elseif inputObject.KeyCode == Enum.KeyCode.Backquote then
+10976: Flags["Aim/AimLock"] = not Flags["Aim/AimLock"]
+
+
+--- Line 11216 ---
+11214: 
+11215: local function IsCursorOverMenu()
+11216: local mouseLoc = Services.UserInputService:GetMouseLocation()
+11217: local mx, my = mouseLoc.X, mouseLoc.Y
+11218: 
+11219: local function isOverFrame(frame)
+
+
+--- Line 11259 ---
+11257: if UIState.PriorityLabel then
+11258: local selectedCount = 0
+11259: local lastCategory = "Head"
+11260: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+11261: if enabled then
+11262: selectedCount = selectedCount + 1
+
+
+--- Line 11260 ---
+11258: local selectedCount = 0
+11259: local lastCategory = "Head"
+11260: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+11261: if enabled then
+11262: selectedCount = selectedCount + 1
+11263: lastCategory = category
+
+
+--- Line 11263 ---
+11261: if enabled then
+11262: selectedCount = selectedCount + 1
+11263: lastCategory = category
+11264: end
+11265: end
+11266: 
+
+
+--- Line 11270 ---
+11268: UIState.PriorityLabel.Text = "Priority: Closest part"
+11269: elseif selectedCount == 1 then
+11270: UIState.PriorityLabel.Text = "Priority: " .. lastCategory
+11271: else
+11272: 
+11273: if CachedTarget then
+
+
+--- Line 11275 ---
+11273: if CachedTarget then
+11274: local targetedPart = CachedTarget[3]
+11275: local categoryName = "Closest part"
+11276: for category, parts in pairs(TARGET_GROUPS) do
+11277: for _, pName in ipairs(parts) do
+11278: if targetedPart.Name == pName then
+
+
+--- Line 11276 ---
+11274: local targetedPart = CachedTarget[3]
+11275: local categoryName = "Closest part"
+11276: for category, parts in pairs(TARGET_GROUPS) do
+11277: for _, pName in ipairs(parts) do
+11278: if targetedPart.Name == pName then
+11279: categoryName = category
+
+
+--- Line 11279 ---
+11277: for _, pName in ipairs(parts) do
+11278: if targetedPart.Name == pName then
+11279: categoryName = category
+11280: break
+11281: end
+11282: end
+
+
+--- Line 11284 ---
+11282: end
+11283: end
+11284: UIState.PriorityLabel.Text = "Priority: " .. categoryName
+11285: else
+11286: UIState.PriorityLabel.Text = "Priority: Closest part"
+11287: end
+
+
+--- Line 11414 ---
+11412: PerformanceLabel.Visible = true
+11413: end
+11414: if LocalHealthHUD and not LocalHealthHUD.Visible and Flags["LocalUI/LocalHealthIndicator"] then
+11415: LocalHealthHUD.Visible = true
+11416: end
+11417: end
+
+
+--- Line 11522 ---
+11520: if specPlayer.Parent then
+11521: local _, specRoot = GetCharacter(specPlayer)
+11522: if specRoot and LocalPlayer.ReplicationFocus ~= specRoot then
+11523: LocalPlayer.ReplicationFocus = specRoot
+11524: end
+11525: else
+
+
+--- Line 11523 ---
+11521: local _, specRoot = GetCharacter(specPlayer)
+11522: if specRoot and LocalPlayer.ReplicationFocus ~= specRoot then
+11523: LocalPlayer.ReplicationFocus = specRoot
+11524: end
+11525: else
+11526: 
+
+
+--- Line 11530 ---
+11528: local myHum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+11529: if myHum then Camera.CameraSubject = myHum end
+11530: LocalPlayer.ReplicationFocus = nil
+11531: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+11532: end
+11533: end
+
+
+--- Line 11531 ---
+11529: if myHum then Camera.CameraSubject = myHum end
+11530: LocalPlayer.ReplicationFocus = nil
+11531: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+11532: end
+11533: end
+11534: end
+
+
+--- Line 11848 ---
+11846: TrackThread(perfThread)
+11847: 
+11848: print(string.format("[Sp3arParvus v%s] Developer tool loaded successfully!", VERSION))
+11849: if SAFE_MODE then
+11850: UI.Notify(
+11851: string.format("Sp3arParvus v%s — Safe Mode", VERSION),
+

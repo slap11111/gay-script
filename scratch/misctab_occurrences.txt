@@ -1,0 +1,274 @@
+--- Line 10372 ---
+10369: UI.CreateNumericInput(HumanoidTab, "Max Slope Angle", "Humanoid/MaxSlopeAngle", Flags["Humanoid/MaxSlopeAngle"], 0, 90, 1, nil, function(v) _updateHum("MaxSlopeAngle", v) end, true)
+10370: UI.CreateNumericInput(HumanoidTab, "Walk Speed", "Humanoid/WalkSpeed", Flags["Humanoid/WalkSpeed"], 0, 500, 1, nil, function(v) _updateHum("WalkSpeed", v) end, true)
+10371: 
+10372: UI.CreateSection(MiscTab, "Br3ak3r Tool")
+10373: UI.CreateToggle(MiscTab, "Enable Br3ak3r", "Br3ak3r/Enabled", Flags["Br3ak3r/Enabled"], function(state)
+10374: Br3ak3rState.CLICKBREAK_ENABLED = state
+10375: if not state and Br3ak3rState.hoverHL then
+10376: Br3ak3rState.hoverHL.Enabled = false
+
+
+--- Line 10373 ---
+10370: UI.CreateNumericInput(HumanoidTab, "Walk Speed", "Humanoid/WalkSpeed", Flags["Humanoid/WalkSpeed"], 0, 500, 1, nil, function(v) _updateHum("WalkSpeed", v) end, true)
+10371: 
+10372: UI.CreateSection(MiscTab, "Br3ak3r Tool")
+10373: UI.CreateToggle(MiscTab, "Enable Br3ak3r", "Br3ak3r/Enabled", Flags["Br3ak3r/Enabled"], function(state)
+10374: Br3ak3rState.CLICKBREAK_ENABLED = state
+10375: if not state and Br3ak3rState.hoverHL then
+10376: Br3ak3rState.hoverHL.Enabled = false
+10377: end
+
+
+--- Line 10379 ---
+10376: Br3ak3rState.hoverHL.Enabled = false
+10377: end
+10378: end)
+10379: UI.CreateButton(MiscTab, "Undo Last Break (Ctrl+Z)", unbreakLast)
+10380: UI.CreateButton(MiscTab, "Clear All Breaks (Ctrl+X)", unbreakAll)
+10381: 
+10382: UI.CreateSection(MiscTab, "H1ghl1ght3r Tool")
+10383: UI.CreateToggle(MiscTab, "Enable H1ghl1ght3r", "H1ghl1ght3r/Enabled", H1ghl1ght3rState.ENABLED, function(state)
+
+
+--- Line 10380 ---
+10377: end
+10378: end)
+10379: UI.CreateButton(MiscTab, "Undo Last Break (Ctrl+Z)", unbreakLast)
+10380: UI.CreateButton(MiscTab, "Clear All Breaks (Ctrl+X)", unbreakAll)
+10381: 
+10382: UI.CreateSection(MiscTab, "H1ghl1ght3r Tool")
+10383: UI.CreateToggle(MiscTab, "Enable H1ghl1ght3r", "H1ghl1ght3r/Enabled", H1ghl1ght3rState.ENABLED, function(state)
+10384: H1ghl1ght3rState.ENABLED = state
+
+
+--- Line 10382 ---
+10379: UI.CreateButton(MiscTab, "Undo Last Break (Ctrl+Z)", unbreakLast)
+10380: UI.CreateButton(MiscTab, "Clear All Breaks (Ctrl+X)", unbreakAll)
+10381: 
+10382: UI.CreateSection(MiscTab, "H1ghl1ght3r Tool")
+10383: UI.CreateToggle(MiscTab, "Enable H1ghl1ght3r", "H1ghl1ght3r/Enabled", H1ghl1ght3rState.ENABLED, function(state)
+10384: H1ghl1ght3rState.ENABLED = state
+10385: if not state and Br3ak3rState.hoverHL then
+10386: Br3ak3rState.hoverHL.Enabled = false
+
+
+--- Line 10383 ---
+10380: UI.CreateButton(MiscTab, "Clear All Breaks (Ctrl+X)", unbreakAll)
+10381: 
+10382: UI.CreateSection(MiscTab, "H1ghl1ght3r Tool")
+10383: UI.CreateToggle(MiscTab, "Enable H1ghl1ght3r", "H1ghl1ght3r/Enabled", H1ghl1ght3rState.ENABLED, function(state)
+10384: H1ghl1ght3rState.ENABLED = state
+10385: if not state and Br3ak3rState.hoverHL then
+10386: Br3ak3rState.hoverHL.Enabled = false
+10387: end
+
+
+--- Line 10389 ---
+10386: Br3ak3rState.hoverHL.Enabled = false
+10387: end
+10388: end)
+10389: UI.CreateButton(MiscTab, "Undo Last Highlight (Ctrl+Shift+Z)", unhighlightLast)
+10390: 
+10391: UI.CreateSection(MiscTab, "Utilities")
+10392: UI.CreateToggle(MiscTab, "Toggle Item Panel", "Misc/ItemPanel", Flags["Misc/ItemPanel"], function(state)
+10393: ItemPanelState.Visible = state
+
+
+--- Line 10391 ---
+10388: end)
+10389: UI.CreateButton(MiscTab, "Undo Last Highlight (Ctrl+Shift+Z)", unhighlightLast)
+10390: 
+10391: UI.CreateSection(MiscTab, "Utilities")
+10392: UI.CreateToggle(MiscTab, "Toggle Item Panel", "Misc/ItemPanel", Flags["Misc/ItemPanel"], function(state)
+10393: ItemPanelState.Visible = state
+10394: if state then
+10395: if not ItemPanelUI.MainFrame then
+
+
+--- Line 10392 ---
+10389: UI.CreateButton(MiscTab, "Undo Last Highlight (Ctrl+Shift+Z)", unhighlightLast)
+10390: 
+10391: UI.CreateSection(MiscTab, "Utilities")
+10392: UI.CreateToggle(MiscTab, "Toggle Item Panel", "Misc/ItemPanel", Flags["Misc/ItemPanel"], function(state)
+10393: ItemPanelState.Visible = state
+10394: if state then
+10395: if not ItemPanelUI.MainFrame then
+10396: CreateItemPanel()
+
+
+--- Line 10406 ---
+10403: end
+10404: end
+10405: end)
+10406: UI.CreateToggle(MiscTab, "Q-Teleport — Press Ctrl+Q to tp to mouse position", "Misc/QTeleport", Flags["Misc/QTeleport"], function(state)
+10407: Flags["Misc/QTeleport"] = state
+10408: end)
+10409: UI.CreateButton(MiscTab, "Rejoin Server", Rejoin)
+10410: UI.CreateButton(MiscTab, "Copy gameInstanceId Link", function()
+
+
+--- Line 10409 ---
+10406: UI.CreateToggle(MiscTab, "Q-Teleport — Press Ctrl+Q to tp to mouse position", "Misc/QTeleport", Flags["Misc/QTeleport"], function(state)
+10407: Flags["Misc/QTeleport"] = state
+10408: end)
+10409: UI.CreateButton(MiscTab, "Rejoin Server", Rejoin)
+10410: UI.CreateButton(MiscTab, "Copy gameInstanceId Link", function()
+10411: local url = "https://www.roblox.com/games/start?placeId=" .. tostring(game.PlaceId) .. "&gameInstanceId=" .. tostring(game.JobId)
+10412: local copy = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
+10413: if copy then
+
+
+--- Line 10410 ---
+10407: Flags["Misc/QTeleport"] = state
+10408: end)
+10409: UI.CreateButton(MiscTab, "Rejoin Server", Rejoin)
+10410: UI.CreateButton(MiscTab, "Copy gameInstanceId Link", function()
+10411: local url = "https://www.roblox.com/games/start?placeId=" .. tostring(game.PlaceId) .. "&gameInstanceId=" .. tostring(game.JobId)
+10412: local copy = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
+10413: if copy then
+10414: pcall(function() copy(url) end)
+
+
+--- Line 10420 ---
+10417: UI.Notify("Game Join Link", "Clipboard function not supported by your exploit", 5)
+10418: end
+10419: end)
+10420: UI.CreateButton(MiscTab, "Unload Script", Cleanup)
+10421: UI.CreateButton(MiscTab, "Force Reload (Reload latest script version from GitHub)", ForceReload)
+10422: 
+10423: UI.CreateSection(MiscTab, "Configuration")
+10424: 
+
+
+--- Line 10421 ---
+10418: end
+10419: end)
+10420: UI.CreateButton(MiscTab, "Unload Script", Cleanup)
+10421: UI.CreateButton(MiscTab, "Force Reload (Reload latest script version from GitHub)", ForceReload)
+10422: 
+10423: UI.CreateSection(MiscTab, "Configuration")
+10424: 
+10425: do
+
+
+--- Line 10423 ---
+10420: UI.CreateButton(MiscTab, "Unload Script", Cleanup)
+10421: UI.CreateButton(MiscTab, "Force Reload (Reload latest script version from GitHub)", ForceReload)
+10422: 
+10423: UI.CreateSection(MiscTab, "Configuration")
+10424: 
+10425: do
+10426: local smRow = Instance.new("Frame")
+10427: smRow.Size = UDim2.new(1, 0, 0, 28)
+
+
+--- Line 10430 ---
+10427: smRow.Size = UDim2.new(1, 0, 0, 28)
+10428: smRow.BackgroundColor3 = SAFE_MODE and Color3.fromRGB(20, 60, 30) or Color3.fromRGB(50, 25, 25)
+10429: smRow.BorderSizePixel = 0
+10430: smRow.Parent = MiscTab
+10431: local smCorner = Instance.new("UICorner")
+10432: smCorner.CornerRadius = UDim.new(0, 6)
+10433: smCorner.Parent = smRow
+10434: local smStroke = Instance.new("UIStroke")
+
+
+--- Line 10450 ---
+10447: smLabel.TextWrapped = true
+10448: smLabel.Parent = smRow
+10449: end
+10450: UI.CreateButton(MiscTab, "Activate/Deactivate Freecam", function()
+10451: if type(FreecamProxy.ToggleFreecam) == "function" then
+10452: FreecamProxy.ToggleFreecam()
+10453: elseif type(_G.ToggleFreecamFunc) == "function" then
+10454: _G.ToggleFreecamFunc()
+
+
+--- Line 10457 ---
+10454: _G.ToggleFreecamFunc()
+10455: end
+10456: end)
+10457: UI.CreateToggle(MiscTab, "Freecam Toggle (Ctrl+P)", "Settings/Freecam Toggle", Flags["Settings/Freecam Toggle"], function(state)
+10458: if not state and type(FreecamProxy.StopFreecam) == "function" then
+10459: FreecamProxy.StopFreecam()
+10460: elseif not state and type(_G.StopFreecamFunc) == "function" then
+10461: _G.StopFreecamFunc()
+
+
+--- Line 10464 ---
+10461: _G.StopFreecamFunc()
+10462: end
+10463: end)
+10464: UI.CreateToggle(MiscTab, "Gh0st Mode (Ctrl+G)", "Settings/GhostMode", Flags["Settings/GhostMode"], function(state)
+10465: if NotifyGui then NotifyGui.Enabled = not state end
+10466: end)
+10467: UI.CreateToggle(MiscTab, "Enable D3v Tool (Ctrl+.)", "Misc/D3vTool", Flags["Misc/D3vTool"])
+10468: UI.CreateToggle(MiscTab, "Scroll-unlocker", "Misc/ScrollUnlocker", Flags["Misc/ScrollUnlocker"], function(state)
+
+
+--- Line 10467 ---
+10464: UI.CreateToggle(MiscTab, "Gh0st Mode (Ctrl+G)", "Settings/GhostMode", Flags["Settings/GhostMode"], function(state)
+10465: if NotifyGui then NotifyGui.Enabled = not state end
+10466: end)
+10467: UI.CreateToggle(MiscTab, "Enable D3v Tool (Ctrl+.)", "Misc/D3vTool", Flags["Misc/D3vTool"])
+10468: UI.CreateToggle(MiscTab, "Scroll-unlocker", "Misc/ScrollUnlocker", Flags["Misc/ScrollUnlocker"], function(state)
+10469: if not state then
+10470: if ZoomState.OriginalMax then
+10471: LocalPlayer.CameraMaxZoomDistance = ZoomState.OriginalMax
+
+
+--- Line 10468 ---
+10465: if NotifyGui then NotifyGui.Enabled = not state end
+10466: end)
+10467: UI.CreateToggle(MiscTab, "Enable D3v Tool (Ctrl+.)", "Misc/D3vTool", Flags["Misc/D3vTool"])
+10468: UI.CreateToggle(MiscTab, "Scroll-unlocker", "Misc/ScrollUnlocker", Flags["Misc/ScrollUnlocker"], function(state)
+10469: if not state then
+10470: if ZoomState.OriginalMax then
+10471: LocalPlayer.CameraMaxZoomDistance = ZoomState.OriginalMax
+10472: end
+
+
+--- Line 10483 ---
+10480: ZoomState.UserScrolled = false
+10481: end
+10482: end)
+10483: UI.CreateNumericInput(MiscTab, "Horizontal Position Force Distance", "Misc/HorizontalPositionForceValue", Flags["Misc/HorizontalPositionForceValue"], 0.1, 100, 0.05, "studs")
+10484: UI.CreateNumericInput(MiscTab, "Vertical Position Force Distance", "Misc/VerticalPositionForceValue", Flags["Misc/VerticalPositionForceValue"], 0.1, 100, 0.05, "studs")
+10485: 
+10486: UI.CreateButton(MiscTab, "Copy Sp3arParvus GitHub Link", function()
+10487: local url = "https://www.pingbird.xyz/~/sp3arparvus"
+
+
+--- Line 10484 ---
+10481: end
+10482: end)
+10483: UI.CreateNumericInput(MiscTab, "Horizontal Position Force Distance", "Misc/HorizontalPositionForceValue", Flags["Misc/HorizontalPositionForceValue"], 0.1, 100, 0.05, "studs")
+10484: UI.CreateNumericInput(MiscTab, "Vertical Position Force Distance", "Misc/VerticalPositionForceValue", Flags["Misc/VerticalPositionForceValue"], 0.1, 100, 0.05, "studs")
+10485: 
+10486: UI.CreateButton(MiscTab, "Copy Sp3arParvus GitHub Link", function()
+10487: local url = "https://www.pingbird.xyz/~/sp3arparvus"
+10488: local copy = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
+
+
+--- Line 10486 ---
+10483: UI.CreateNumericInput(MiscTab, "Horizontal Position Force Distance", "Misc/HorizontalPositionForceValue", Flags["Misc/HorizontalPositionForceValue"], 0.1, 100, 0.05, "studs")
+10484: UI.CreateNumericInput(MiscTab, "Vertical Position Force Distance", "Misc/VerticalPositionForceValue", Flags["Misc/VerticalPositionForceValue"], 0.1, 100, 0.05, "studs")
+10485: 
+10486: UI.CreateButton(MiscTab, "Copy Sp3arParvus GitHub Link", function()
+10487: local url = "https://www.pingbird.xyz/~/sp3arparvus"
+10488: local copy = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
+10489: if copy then
+10490: pcall(function() copy(url) end)
+
+
+--- Line 10495 ---
+10492: end
+10493: end)
+10494: 
+10495: UI.CreateButton(MiscTab, "Join Official Discord Server", function()
+10496: local inviteCode = "KJuxMnBFqB"
+10497: local url = "https://discord.gg/" .. inviteCode
+10498: local copy = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
+10499: if copy then
+

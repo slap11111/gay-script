@@ -1,0 +1,203 @@
+2: -- ║            Sp3arParvus — Developer Tool                          ║
+10: print(string.format("[Sp3arParvus v%s] Loading...", VERSION))
+13: print("[Sp3arParvus] Waiting for game to load...")
+15: print("[Sp3arParvus] Game loaded!")
+16: print("[Sp3arParvus] Waiting for LocalPlayer...")
+26: return warn("[Sp3arParvus] Failed to get LocalPlayer after " .. MAX_INIT_WAIT .. " seconds. Aborting.")
+28: print("[Sp3arParvus] LocalPlayer ready: " .. LocalPlayer.Name)
+30: print("[Sp3arParvus] Checking for Character (non-blocking)...")
+40: print("[Sp3arParvus] Character ready!")
+42: warn("[Sp3arParvus] Character exists but not yet parented, continuing anyway...")
+46: print("[Sp3arParvus] No character at load time — continuing without one. Humanoid will be detected when spawned.")
+49: print("[Sp3arParvus] Waiting for Camera...")
+55: warn("[Sp3arParvus] Camera not found, continuing anyway...")
+57: print("[Sp3arParvus] Camera ready!")
+59: print("[Sp3arParvus] Waiting for PlayerScripts to initialize...")
+70: print("[Sp3arParvus] PlayerScripts ready!")
+73: print(string.format("[Sp3arParvus] Initialization complete! (%.2fs)", tick() - initStartTime))
+127: ["ESP/HealthIndicator"] = true,
+160: ["LocalUI/LocalHealthIndicator"] = true,
+215: local PROPERTY_CATEGORIES = {
+479: print("[Sp3arParvus] Humanoid detected late (deferred spawn) and captured.")
+487: print("[Sp3arParvus] Local character re-cached and ready.")
+491: if rawget(globalEnv, "Sp3arParvus") then
+492: return warn("[Sp3arParvus] Already loaded! Use Shutdown button to cleanup first.")
+495: globalEnv.Sp3arParvus = {
+501: Sp3arParvus = globalEnv.Sp3arParvus
+505: table.insert(Sp3arParvus.Connections, connection)
+512: table.insert(Sp3arParvus.Threads, thread)
+518: local connections = Sp3arParvus.Connections
+534: local threads = Sp3arParvus.Threads
+750: local mouseLoc = Services.UserInputService:GetMouseLocation()
+889: print("[Sp3arParvus] Local Humanoid settings captured and synced.")
+1295: local mouseLocation = Services.UserInputService:GetMouseLocation()
+1297: local adjustedLocation = mouseLocation - inset
+1302: local ray = Camera:ScreenPointToRay(adjustedLocation.X, adjustedLocation.Y)
+1305: return ray.Origin, ray.Direction * RAYCAST_MAX_DISTANCE, mouseLocation.X, mouseLocation.Y
+1838: if Sp3arParvus.DestroyWaypointFunc then Sp3arParvus.DestroyWaypointFunc(id) end
+1863: Sp3arParvus.DestroyWaypointFunc = func
+1931: UI.Notify("Waypoints", string.format("Waypoint created at %.1f, %.1f, %.1f", position.X, position.Y, position.Z))
+1999: ScreenGui.Name = "Sp3arParvusUI"
+2022: NotifyGui.Name = "Sp3arNotifications"
+2064: local baseUrl = "https://www.pingbird.xyz/f/Sp3arParvus.png"
+2103: local iconPath = "Sp3arParvus_Icon.png"
+2124: splashGui.Name = "Sp3arParvusSplash"
+2186: logoImg.Image = "https://www.pingbird.xyz/f/Sp3arParvus.png"
+2200: titleLbl.Text = "Sp3arParvus  v" .. VERSION
+2314: frame.Name = "Notification"
+2347: icon.Image = CachedIconAsset or "https://www.pingbird.xyz/f/Sp3arParvus.png"
+2374: titleLabel.Text = title or "Notification"
+2717: local minimizedText = "Sp3arParvus v" .. VERSION
+2821: local Indicator = Instance.new("Frame")
+2822: Indicator.Size = UDim2.new(0, 3, 0, 16)
+2823: Indicator.Position = UDim2.new(0, 0, 0.5, -8)
+2824: Indicator.BackgroundColor3 = UI_THEME.Accent
+2825: Indicator.BorderSizePixel = 0
+2826: Indicator.BackgroundTransparency = 1
+2827: Indicator.Parent = TabButton
+2828: local indCorner = Instance.new("UICorner"); indCorner.CornerRadius = UDim.new(1,0); indCorner.Parent = Indicator
+2857: TweenService:Create(t.Indicator, TWEENS.MEDIUM, {BackgroundTransparency = 1}):Play()
+2862: TweenService:Create(Indicator, TWEENS.MEDIUM, {BackgroundTransparency = 0}):Play()
+2869: table.insert(UIState.Tabs, {Button = TabButton, Label = TabLabel, Indicator = Indicator, Page = Page, Select = SelectTab})
+3593: print("[Sp3arParvus] Successfully cached RaycastFilterType.Exclude")
+3604: print("[Sp3arParvus] Successfully cached RaycastFilterType.Blacklist")
+3608: warn("[Sp3arParvus] WARNING: Could not cache any RaycastFilterType enum - raycasts may not filter properly")
+3684: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+3687: for _, partName in ipairs(TARGET_GROUPS[category]) do
+4875: LocalPlayer.ReplicationFocus = nil
+4876: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+4883: LocalPlayer.ReplicationFocus = targetRoot
+4885: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(false) end)
+5082: local function CreateDetailsTab(name, label)
+5111: CreateDetailsTab("General", "General")
+5112: CreateDetailsTab("Player", "Player")
+5113: CreateDetailsTab("Workspace", "Workspace")
+5916: local categories = {"Data", "Appearance", "Behavior", "Stats", "Transform"}
+5918: for _, catName in ipairs(categories) do
+5919: local catProps = PROPERTY_CATEGORIES[catName]
+5920: local catHasAny = false
+5922: for _, prop in ipairs(catProps) do
+5926: catHasAny = true
+5932: if catHasAny then
+5933: local catHeader = Instance.new("Frame")
+5934: catHeader.Size = UDim2.new(1, 0, 0, 20)
+5935: catHeader.BackgroundTransparency = 1
+5936: catHeader.Parent = content
+5938: local catLabel = Instance.new("TextLabel")
+5939: catLabel.Size = UDim2.new(1, -10, 1, 0)
+5940: catLabel.Position = UDim2.fromOffset(5, 0)
+5941: catLabel.BackgroundTransparency = 1
+5942: catLabel.Text = "v " .. catName
+5943: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+5944: catLabel.TextSize = 11
+5945: catLabel.TextColor3 = UI_THEME.TextDark
+5946: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+5947: catLabel.Parent = catHeader
+5949: for _, prop in ipairs(catProps) do
+6058: local categories = {"Data", "Appearance", "Behavior", "Stats", "Transform"}
+6061: for _, catName in ipairs(categories) do
+6062: local catProps = PROPERTY_CATEGORIES[catName]
+6063: local catHasAny = false
+6065: for _, prop in ipairs(catProps) do
+6069: catHasAny = true
+6075: if catHasAny then
+6077: local catHeaderId = "Cat_" .. catName
+6078: currentPropRows[catHeaderId] = true
+6079: local catHeader = AdvancedPlayerPanelState.PropertyRowCache[catHeaderId]
+6081: if not catHeader then
+6082: catHeader = Instance.new("Frame")
+6083: catHeader.Size = UDim2.new(1, 0, 0, 20)
+6084: catHeader.BackgroundTransparency = 1
+6085: catHeader.Parent = content
+6086: AdvancedPlayerPanelState.PropertyRowCache[catHeaderId] = catHeader
+6088: local catLabel = Instance.new("TextLabel")
+6089: catLabel.Name = "CatLabel"
+6090: catLabel.Size = UDim2.new(1, -10, 1, 0)
+6091: catLabel.Position = UDim2.fromOffset(5, 0)
+6092: catLabel.BackgroundTransparency = 1
+6093: catLabel.Text = "v " .. catName
+6094: catLabel.FontFace = Font.fromName("Montserrat", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+6095: catLabel.TextSize = 11
+6096: catLabel.TextColor3 = UI_THEME.TextDark
+6097: catLabel.TextXAlignment = Enum.TextXAlignment.Left
+6098: catLabel.Parent = catHeader
+6100: catHeader.LayoutOrder = orderCounter
+6102: for _, prop in ipairs(catProps) do
+6508: createLabel("Account Created", creationDate)
+6647: PoolFolder.Name = "Sp3arParvus_Pool"
+6959: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+6962: for _, partName in ipairs(TARGET_GROUPS[category]) do
+7283: local settingEnabled = Flags["ESP/HealthIndicator"]
+7343: function CreateD3vToolHUD(parent)
+7395: local mouseLoc = UserInputService:GetMouseLocation()
+7592: if not Flags["LocalUI/LocalHealthIndicator"] then
+8358: if delfile and isfile and isfile("Sp3arParvus_Icon.png") then
+8359: pcall(delfile, "Sp3arParvus_Icon.png")
+8371: Sp3arParvus.Active = false
+8373: for _, conn in pairs(Sp3arParvus.Connections) do
+8378: table.clear(Sp3arParvus.Connections)
+8387: for _, thread in pairs(Sp3arParvus.Threads) do
+8392: table.clear(Sp3arParvus.Threads)
+8601: LocalPlayer.ReplicationFocus = nil
+8602: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+8623: rawset(globalEnv, "Sp3arParvus", nil)
+8625: warn("[Sp3arParvus] Script Unloaded! You can now reload the script.")
+8629: UI.Notify("Sp3arParvus", "Reloading script...")
+8633: if isfile and isfile("Sp3arParvus.lua") then
+8634: loadstring(readfile("Sp3arParvus.lua"))()
+8635: elseif isfile and isfile("Sp3arParvus/Sp3arParvus.lua") then
+8636: loadstring(readfile("Sp3arParvus/Sp3arParvus.lua"))()
+8638: loadstring(game:HttpGet("https://raw.githubusercontent.com/JakeHukari/Sp3arParvus/refs/heads/main/Sp3arParvus.lua", true))()
+8643: UI.Notify("Sp3arParvus", "Fetching and reloading latest script version...")
+8647: loadstring(game:HttpGet("https://raw.githubusercontent.com/JakeHukari/Sp3arParvus/refs/heads/main/Sp3arParvus.lua", true))()
+8663: {Text = "-", Key = "Minus", Width = 1, KeyCode = Enum.KeyCode.Minus, Name = "Minimize Menu", Action = "Ctrl + -", Desc = "Minimizes or maximizes the main Sp3arParvus GUI window."},
+8675: {Text = "Y", Key = "Y", Width = 1, KeyCode = Enum.KeyCode.Y, Name = "Waypoint Teleport", Action = "Ctrl + Y", Desc = "Teleports player to the most recently created active waypoint."},
+8686: {Text = "caps", Key = "CapsLock", Width = 1.75, KeyCode = Enum.KeyCode.CapsLock, Name = "Toggle Menu Visibility", Action = "CapsLock", Desc = "Toggles visibility of the main Sp3arParvus menu GUI."},
+8711: {Text = ".", Key = "Period", Width = 1, KeyCode = Enum.KeyCode.Period, Name = "Toggle Dev Tool", Action = "Ctrl + .", Desc = "Toggles developer HUD panels / D3vTool.", StatusKey = "Misc/D3vTool"},
+9147: local Window = UI.CreateWindow("Sp3arParvus")
+9149: CreateD3vToolHUD(ScreenGui)
+9353: UI.Notify("Teleport Error", "Target humanoid location could not be determined.")
+9607: UI.Notify("Teleport Error", "Target humanoid location could not be determined.")
+9684: UI.CreateToggle(AimTab, "Show Tracking Indicator Dots", "Aim/ShowAssistDots", Flags["Aim/ShowAssistDots"])
+9855: UI.CreateToggle(VisualsTab, "Draw Health Indicator", "ESP/HealthIndicator", Flags["ESP/HealthIndicator"])
+9877: UI.CreateToggle(VisualsTab, "Show Local Health Indicator", "LocalUI/LocalHealthIndicator", Flags["LocalUI/LocalHealthIndicator"], function(state)
+9965: -- Helper: create a numeric input that reads/writes directly to Services.Lighting
+9982: -- Helper: create a toggle that reads/writes a boolean property on Services.Lighting
+10486: UI.CreateButton(MiscTab, "Copy Sp3arParvus GitHub Link", function()
+10487: local url = "https://www.pingbird.xyz/~/sp3arparvus"
+10491: UI.Notify("GitHub", "Sp3arParvus link has been added to clipboard", 5)
+10513: ["Content-Type"] = "application/json",
+10565: if player.Parent and Sp3arParvus.Active then
+10605: if player.Parent and Sp3arParvus.Active then
+10711: local mouseLoc = UserInputService:GetMouseLocation()
+10941: UI.Notify("Sp3arParvus", "Unloaded with 'Ctrl+U'")
+11201: "Sp3arParvusShortcuts",
+11216: local mouseLoc = Services.UserInputService:GetMouseLocation()
+11259: local lastCategory = "Head"
+11260: for category, enabled in pairs(Flags["Aim/TargetGroups"]) do
+11263: lastCategory = category
+11270: UIState.PriorityLabel.Text = "Priority: " .. lastCategory
+11275: local categoryName = "Closest part"
+11276: for category, parts in pairs(TARGET_GROUPS) do
+11279: categoryName = category
+11284: UIState.PriorityLabel.Text = "Priority: " .. categoryName
+11295: local showCircle = Sp3arParvus.Active and LocalCharReady and not SAFE_MODE and Flags["Aim/AimLock"] and Flags["Aim/FOV/ShowCircle"]
+11358: if not Sp3arParvus.Active or not LocalCharReady then
+11399: if not Sp3arParvus.Active or not LocalCharReady then return end
+11414: if LocalHealthHUD and not LocalHealthHUD.Visible and Flags["LocalUI/LocalHealthIndicator"] then
+11522: if specRoot and LocalPlayer.ReplicationFocus ~= specRoot then
+11523: LocalPlayer.ReplicationFocus = specRoot
+11530: LocalPlayer.ReplicationFocus = nil
+11531: pcall(function() GuiService:SetGameplayPausedNotificationEnabled(true) end)
+11751: while Sp3arParvus.Active do
+11841: while Sp3arParvus.Active do
+11848: print(string.format("[Sp3arParvus v%s] Developer tool loaded successfully!", VERSION))
+11851: string.format("Sp3arParvus v%s — Safe Mode", VERSION),
+11855: print(string.format("[Sp3arParvus v%s] ✓ SAFE MODE active — Camera Tracking and Input Simulation are OFF", VERSION))
+11858: string.format("Sp3arParvus v%s", VERSION),
+11859: string.format("Sp3arParvus v%s loaded. Camera Tracking: %s | ESP: %s | Safe Mode: OFF",
+11865: print(string.format("[Sp3arParvus v%s] Camera Tracking: %s | ESP: %s | Input Sim: %s",
+11872: print(string.format("[Sp3arParvus v%s] Br3ak3r: %s", VERSION, Flags["Br3ak3r/Enabled"] and "ON" or "OFF"))
+11873: print(string.format("[Sp3arParvus v%s] Press RIGHT SHIFT to toggle UI visibility", VERSION))
+11874: print(string.format("[Sp3arParvus v%s] Br3ak3r Controls: Ctrl+Click=Break | Ctrl+Z=Undo | Ctrl+B=Toggle", VERSION))
+11875: print(string.format("[Sp3arParvus v%s] Distance Colors: Pink=Closest | Red≤750 | Yellow≤1875 | Green>1875", VERSION))

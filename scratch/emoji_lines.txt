@@ -1,0 +1,102 @@
+Line 257 matches: peace (\u262e)
+  Code: UI.Notify("Player Whitelisted \u262e\ufe0f", player.Name .. " has been whitelisted.", 3)
+Line 259 matches: peace (\u262e)
+  Code: UI.Notify("Player unWhitelisted \u262e\ufe0f", player.Name .. " has been unwhitelisted.", 3)
+Line 269 matches: skull/blacklist (\u2620)
+  Code: UI.Notify("Player Blacklisted \u2620\ufe0f", player.Name .. " has been blacklisted.", 3)
+Line 271 matches: skull/blacklist (\u2620)
+  Code: UI.Notify("Player unBlacklisted \u2620\ufe0f", player.Name .. " has been unblacklisted.", 3)
+Line 280 matches: peace (\u262e)
+  Code: UI.Notify("Team Whitelisted \u262e\ufe0f", "Team " .. teamName .. " has been whitelisted.", 3)
+Line 282 matches: peace (\u262e)
+  Code: UI.Notify("Team unWhitelisted \u262e\ufe0f", "Team " .. teamName .. " has been unwhitelisted.", 3)
+Line 291 matches: skull/blacklist (\u2620)
+  Code: UI.Notify("Team Blacklisted \u2620\ufe0f", "Team " .. teamName .. " has been blacklisted.", 3)
+Line 293 matches: skull/blacklist (\u2620)
+  Code: UI.Notify("Team unBlacklisted \u2620\ufe0f", "Team " .. teamName .. " has been unblacklisted.", 3)
+Line 335 matches: star (\u2b50)
+  Code: UI.Notify("Player Deprioritized \u2b50", player.Name .. " has been deprioritized.", 3)
+Line 341 matches: star (\u2b50)
+  Code: UI.Notify("Player Prioritized \u2b50", player.Name .. " has been prioritized.", 3)
+Line 2925 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = Flags[flag .. "/Locked"] and "\U0001f512" or "\U0001f513"
+Line 2934 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = Flags[flag .. "/Locked"] and "\U0001f512" or "\U0001f513"
+Line 3017 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = Flags[flag .. "/Locked"] and "\U0001f512" or "\U0001f513"
+Line 3026 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = Flags[flag .. "/Locked"] and "\U0001f512" or "\U0001f513"
+Line 4410 matches: backpack (\U0001f392)
+  Code: title.Text = "\U0001f392 Item Panel"
+Line 4609 matches: players (\U0001f465), player profile (\U0001f464)
+  Code: local typeIcon = item.type == "Player" and "\U0001f464" or "\U0001f465"
+Line 4656 matches: cross (\u274c)
+  Code: createRowBtn("\u274c", -26, function()
+Line 4939 matches: settings (\u2699)
+  Code: settingsBtn.Text = "\u2699\ufe0f"
+Line 5023 matches: peace (\u262e)
+  Code: CreateTab("Whitelisted", "Whitelisted (\u262e\ufe0f)")
+Line 5024 matches: skull/blacklist (\u2620)
+  Code: CreateTab("Blacklisted", "Blacklisted (\u2620\ufe0f)")
+Line 5287 matches: skull/blacklist (\u2620)
+  Code: UI.CreateSection(settingsContent, "Targeting Rules for blacklisted (\u2620\ufe0f) players")
+Line 5292 matches: star (\u2b50)
+  Code: UI.CreateSection(settingsContent, "Target Prioritization (\u2b50) List")
+Line 5481 matches: peace (\u262e)
+  Code: wBtn.Text = "\u262e\ufe0f"
+Line 5497 matches: skull/blacklist (\u2620)
+  Code: bBtn.Text = "\u2620\ufe0f"
+Line 5514 matches: star (\u2b50)
+  Code: pBtn.Text = "\u2b50"
+Line 5554 matches: peace (\u262e)
+  Code: pwBtn.Text = "\u262e\ufe0f"
+Line 5570 matches: skull/blacklist (\u2620)
+  Code: pbBtn.Text = "\u2620\ufe0f"
+Line 5586 matches: star (\u2b50)
+  Code: ppBtn.Text = "\u2b50"
+Line 5736 matches: clipboard (\U0001f4cb)
+  Code: copyBtn.Text = "\U0001f4cb"
+Line 5795 matches: peace (\u262e)
+  Code: wBtn.Text = "\u262e\ufe0f"
+Line 5815 matches: skull/blacklist (\u2620)
+  Code: bBtn.Text = "\u2620\ufe0f"
+Line 5835 matches: star (\u2b50)
+  Code: pBtn.Text = "\u2b50"
+Line 5966 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: lockBtn.Text = isLocked and "\U0001f512" or "\U0001f513"
+Line 5981 matches: unlocked lock (\U0001f513)
+  Code: lockBtn.Text = "\U0001f513"
+Line 5985 matches: locked lock (\U0001f512)
+  Code: lockBtn.Text = "\U0001f512"
+Line 7105 matches: cross (\u274c)
+  Code: statusEmoji = "\u274c"
+Line 7107 matches: checkmark (\u2705)
+  Code: statusEmoji = "\u2705"
+Line 7109 matches: cross (\u274c)
+  Code: statusEmoji = "\u274c"
+Line 7111 matches: checkmark (\u2705)
+  Code: statusEmoji = "\u2705"
+Line 7656 matches: locked lock (\U0001f512)
+  Code: local val = AimActive and "LOCKED \U0001f512" or "IDLE \u2500"
+Line 8719 matches: accent bullet (\u2756)
+  Code: {Text = "\u2756", Width = 1.25},
+Line 8910 matches: mouse (\U0001f5b1), keyboard (\u2328)
+  Code: titleLabel.Text = (keyData.Key == "MouseButton1" or keyData.Key == "MouseButton2" or keyData.Key == "MouseButton3") and ("\U0001f5b1  " .. keyData.Name) or ("\u2328  " .. keyData.Name)
+Line 9394 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = initialLocked and "\U0001f512" or "\U0001f513"
+Line 9437 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = isLocked and "\U0001f512" or "\U0001f513"
+Line 9479 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = initialLocked and "\U0001f512" or "\U0001f513"
+Line 9528 matches: unlocked lock (\U0001f513), locked lock (\U0001f512)
+  Code: LockBtn.Text = isLocked and "\U0001f512" or "\U0001f513"
+Line 9669 matches: warning (\u26a0)
+  Code: safeBanner.Text = "\u26a0  Camera Tracking & Input Simulation\nare disabled in Safe Mode"
+Line 10000 matches: reload (\u27f3)
+  Code: UI.CreateButton(VisualsTab, "\u27f3  Refresh Values from World", function()
+Line 10443 matches: warning (\u26a0)
+  Code: or  "\u26a0  Safe Mode: OFF \u2014 All features active (set at script top)"
+Line 10631 matches: peace (\u262e)
+  Code: UI.Notify("\u262e\ufe0f Whitelist", "Whitelisted player " .. (player.Name or "Unknown") .. " has joined the server")
+Line 10633 matches: skull/blacklist (\u2620)
+  Code: UI.Notify("\u2620\ufe0f Blacklist", "Blacklisted player " .. (player.Name or "Unknown") .. " has joined the server")
