@@ -10702,8 +10702,21 @@ TrackConnection(Services.UserInputService.InputBegan:Connect(function(input, gam
         H1ghl1ght3rState.SHIFT_HELD = true
     end
 
-    if not gameProcessed and input.UserInputType == Enum.UserInputType.MouseButton2 then
-        AimState.Aim = Flags["Aim/AimLock"]
+    if not gameProcessed then
+        local isAimKey = false
+        if Flags["Aim/KeybindEnabled"] then
+            local targetKey = Flags["Aim/AimKey"] or "E"
+            if targetKey:sub(1, 11) == "MouseButton" then
+                if input.UserInputType.Name == targetKey then isAimKey = true end
+            else
+                if input.KeyCode.Name == targetKey then isAimKey = true end
+            end
+        else
+            if input.UserInputType == Enum.UserInputType.MouseButton2 then isAimKey = true end
+        end
+        if isAimKey then
+            AimState.Aim = Flags["Aim/AimLock"]
+        end
     end
 
     if not gameProcessed and (input.KeyCode == Enum.KeyCode.I or input.KeyCode == Enum.KeyCode.O) then
@@ -10813,8 +10826,21 @@ TrackConnection(Services.UserInputService.InputEnded:Connect(function(input)
         end
     end
 
-    if input.UserInputType == Enum.UserInputType.MouseButton2 then
-        AimState.Aim = false
+    do
+        local isAimKey = false
+        if Flags["Aim/KeybindEnabled"] then
+            local targetKey = Flags["Aim/AimKey"] or "E"
+            if targetKey:sub(1, 11) == "MouseButton" then
+                if input.UserInputType.Name == targetKey then isAimKey = true end
+            else
+                if input.KeyCode.Name == targetKey then isAimKey = true end
+            end
+        else
+            if input.UserInputType == Enum.UserInputType.MouseButton2 then isAimKey = true end
+        end
+        if isAimKey then
+            AimState.Aim = false
+        end
     end
 end))
 

@@ -57864,6 +57864,7 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 
 			for _, player in ipairs(playersList) do
 				if player ~= localPlayer then
+					pcall(function()
 					local char = player.Character
 					local hum = char and char:FindFirstChildOfClass("Humanoid")
 					if char and hum and hum.Health > 0 then
@@ -57889,7 +57890,7 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							local rightLeg = char:FindFirstChild("Right Leg")
 							
 							rawLines = {
-								{getPos(head, "center"), getPos(torso, "top")},
+								{getPos(head, "top"), getPos(torso, "top")},
 								{getPos(torso, "top"), getPos(torso, "bottom")},
 								{getPos(torso, "top"), getPos(leftArm, "top")},
 								{getPos(leftArm, "top"), getPos(leftArm, "bottom")},
@@ -57905,10 +57906,10 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 								if not part then return nil end
 								local att = attName and part:FindFirstChild(attName)
 								if att and att:IsA("Attachment") then
-									local success, pos = pcall(function()
+									local ok, pos = pcall(function()
 										return part.CFrame:PointToWorldSpace(att.Position)
 									end)
-									if success and pos then return pos end
+									if ok and pos then return pos end
 								end
 								return part.Position
 							end
@@ -57984,7 +57985,8 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							end
 						end
 					end
-				end
+				end) -- end pcall
+			end
 			end
 		end))
 	else
