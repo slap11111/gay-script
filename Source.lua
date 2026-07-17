@@ -57565,14 +57565,167 @@ cmd.add({"esp", "espplayers", "playeresp"}, {"esp [healthbar/bar/off] (espplayer
 	NAmanage.ESP_EnablePlayerMode("all", "", false, "players")
 end, true)
 
-cmd.add({"esphealthbar", "espbar", "healthbaresp", "baresp"}, {"esphealthbar (espbar)","Toggle healthbar rendering on drawing ESP"}, function()
-	NAStuff.ESP_HealthBarEnabled = not NAStuff.ESP_HealthBarEnabled
-	if NAStuff.ESP_HealthBarEnabled then
-		NAStuff.ESP_RenderMode = "Drawing API"
+NAStuff.CustomHealthBarConnections = NAStuff.CustomHealthBarConnections or {}
+NAStuff.CustomHealthBarDrawings = NAStuff.CustomHealthBarDrawings or {}
+
+local function RemovePlayerHealthBar(player)
+	local drawings = NAStuff.CustomHealthBarDrawings[player]
+	if drawings then
+		if drawings.Outline then pcall(function() drawings.Outline:Remove() end) end
+		if drawings.Bar then pcall(function() drawings.Bar:Remove() end) end
+		NAStuff.CustomHealthBarDrawings[player] = nil
 	end
-	DoNotif("ESP Healthbar " .. (NAStuff.ESP_HealthBarEnabled and "Enabled" or "Disabled"), 2, "ESP")
-	if ESPPlayersEnabled then
-		NAmanage.ESP_EnablePlayerMode("all", "", false, "players")
+	local conn = NAStuff.CustomHealthBarConnections[player]
+	if conn then
+		pcall(function() conn:Disconnect() end)
+		NAStuff.CustomHealthBarConnections[player] = nil
+	end
+end
+
+local function CleanAllHealthBars()
+	for player in pairs(NAStuff.CustomHealthBarConnections) do
+		RemovePlayerHealthBar(player)
+	end
+	table.clear(NAStuff.CustomHealthBarConnections)
+	table.clear(NAStuff.CustomHealthBarDrawings)
+end
+
+local function AddCustomHealthBarESP(player)
+	if not player or player == Players.LocalPlayer then return end
+	RemovePlayerHealthBar(player)
+	
+	local Camera = workspace.CurrentCamera or workspace:FindFirstChildOfClass("Camera")
+	local Settings = {
+		PaddingInStuds = 1.5,
+		MinBoxSize = 2,
+		BarGap = 2,
+		BarWidth = 2,
+		TextSize = 8,
+		Font = 3,
+		StaticDistance = 300,
+		StaticSize = Vector2.new(4, 6)
+	}
+
+	local function CreateLine()
+		local Line = Drawing.new("Square")
+		Line.Visible = false
+		Line.Transparency = 1
+		Line.Thickness = 0
+		Line.Filled = true
+		return Line
+	end
+
+	local HealthOutline = CreateLine()
+	HealthOutline.Color = Color3.new(0,0,0)
+	HealthOutline.ZIndex = 1
+
+	local HealthBar = CreateLine()
+	HealthBar.ZIndex = 2
+
+	NAStuff.CustomHealthBarDrawings[player] = {Outline = HealthOutline, Bar = HealthBar}
+
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local function Hide()
+			HealthOutline.Visible = false
+			HealthBar.Visible = false
+		end
+
+		if not player.Parent or not player.Character then Hide(); return end
+		local Char = player.Character
+		local RootPart = Char:FindFirstChild("HumanoidRootPart")
+		local Humanoid = Char:FindFirstChild("Humanoid")
+
+		if not RootPart or not Humanoid or Humanoid.Health <= 0 then Hide(); return end
+
+		local Distance = (Camera.CFrame.Position - RootPart.Position).Magnitude
+		local ViewportHeight = Camera.ViewportSize.Y
+		local FOV_Rad = math.rad(Camera.FieldOfView)
+		local PPS = ViewportHeight / (2 * Distance * math.tan(FOV_Rad / 2))
+
+		local minX, minY, maxX, maxY
+
+		if Distance > Settings.StaticDistance then
+			local RootScreen, OnScreen = Camera:WorldToViewportPoint(RootPart.Position)
+			if OnScreen then
+				local BoxW_Pixel = Settings.StaticSize.X * PPS
+				local BoxH_Pixel = Settings.StaticSize.Y * PPS
+
+				minX = RootScreen.X - (BoxW_Pixel / 2)
+				maxX = RootScreen.X + (BoxW_Pixel / 2)
+				minY = RootScreen.Y - (BoxH_Pixel / 2)
+				maxY = RootScreen.Y + (BoxH_Pixel / 2)
+			else
+				Hide(); return
+			end
+		else
+			minX, minY = 99999, 99999
+			maxX, maxY = -99999, -99999
+			local AnyPartOnScreen = false
+			for _, part in pairs(Char:GetChildren()) do
+				if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" and part.Name ~= "Handle" then
+					local ScreenPos, OnScreen = Camera:WorldToViewportPoint(part.Position)
+					if OnScreen then
+						AnyPartOnScreen = true
+						if ScreenPos.X < minX then minX = ScreenPos.X end
+						if ScreenPos.X > maxX then maxX = ScreenPos.X end
+						if ScreenPos.Y < minY then minY = ScreenPos.Y end
+						if ScreenPos.Y > maxY then maxY = ScreenPos.Y end
+					end
+				end
+			end
+			if not AnyPartOnScreen then Hide(); return end
+
+			local Padding = PPS * Settings.PaddingInStuds
+			minX = minX - Padding
+			maxX = maxX + Padding
+			minY = minY - Padding
+			maxY = maxY + Padding
+		end
+
+		local Left = math.floor(minX)
+		local Top = math.floor(minY)
+		local Right = math.floor(maxX)
+		local Bottom = math.floor(maxY)
+
+		local W = Right - Left
+		local H = Bottom - Top
+
+		W = math.max(W, Settings.MinBoxSize)
+		H = math.max(H, Settings.MinBoxSize)
+
+		local Health = math.clamp(Humanoid.Health, 0, Humanoid.MaxHealth)
+		local HP_Percentage = Health / Humanoid.MaxHealth
+		local BarColor = Color3.fromHSV(HP_Percentage * 0.33, 1, 1)
+		local BarX = Left - Settings.BarGap - Settings.BarWidth - 2
+		local FillHeight = math.floor((H + 1) * HP_Percentage)
+
+		HealthOutline.Position = Vector2.new(BarX, Top - 1)
+		HealthOutline.Size = Vector2.new(Settings.BarWidth + 2, H + 3)
+		HealthOutline.Visible = true
+
+		HealthBar.Position = Vector2.new(BarX + 1, (Top + H + 1) - FillHeight)
+		HealthBar.Size = Vector2.new(Settings.BarWidth, FillHeight)
+		HealthBar.Color = BarColor
+		HealthBar.Visible = true
+	end)
+	NAStuff.CustomHealthBarConnections[player] = connection
+end
+
+cmd.add({"esphealthbar", "espbar", "healthbaresp", "baresp"}, {"esphealthbar (espbar)","Toggle healthbar rendering on drawing ESP"}, function()
+	NAStuff.CustomHealthBarESPEnabled = not NAStuff.CustomHealthBarESPEnabled
+	if NAStuff.CustomHealthBarESPEnabled then
+		DoNotif("Custom Healthbar ESP Enabled", 2, "ESP")
+		for _, v in pairs(Players:GetPlayers()) do
+			if v ~= Players.LocalPlayer then AddCustomHealthBarESP(v) end
+		end
+		NAlib.reconnect("custom_healthbar_player_added", Players.PlayerAdded:Connect(AddCustomHealthBarESP))
+		NAlib.reconnect("custom_healthbar_player_removing", Players.PlayerRemoving:Connect(RemovePlayerHealthBar))
+	else
+		DoNotif("Custom Healthbar ESP Disabled", 2, "ESP")
+		NAlib.disconnect("custom_healthbar_player_added")
+		NAlib.disconnect("custom_healthbar_player_removing")
+		CleanAllHealthBars()
 	end
 end)
 
@@ -57748,6 +57901,17 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 								{getPos(rightLeg, "top"), getPos(rightLeg, "bottom")}
 							}
 						else
+							local function getPartOrAttachmentPos(part, attName)
+								if not part then return nil end
+								local att = attName and part:FindFirstChild(attName)
+								if att and att:IsA("Attachment") then
+									local success, pos = pcall(function()
+										return part.CFrame:PointToWorldSpace(att.Position)
+									end)
+									if success and pos then return pos end
+								end
+								return part.Position
+							end
 							local connections = {
 								{"Head", "UpperTorso", "NeckRigAttachment", "NeckRigAttachment"},
 								{"UpperTorso", "LowerTorso", "WaistRigAttachment", "WaistRigAttachment"},
@@ -57769,12 +57933,11 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 								local partA = char:FindFirstChild(pair[1])
 								local partB = char:FindFirstChild(pair[2])
 								if partA and partB and partA:IsA("BasePart") and partB:IsA("BasePart") then
-									local posAW, posBW
-									local attA = pair[3] and partA:FindFirstChild(pair[3])
-									local attB = pair[4] and partB:FindFirstChild(pair[4])
-									if attA and attA:IsA("Attachment") then posAW = attA.WorldPosition else posAW = partA.Position end
-									if attB and attB:IsA("Attachment") then posBW = attB.WorldPosition else posBW = partB.Position end
-									table.insert(rawLines, {posAW, posBW})
+									local posAW = getPartOrAttachmentPos(partA, pair[3])
+									local posBW = getPartOrAttachmentPos(partB, pair[4])
+									if posAW and posBW then
+										table.insert(rawLines, {posAW, posBW})
+									end
 								end
 							end
 						end
