@@ -63310,7 +63310,7 @@ end, true)
 
 cmd.add({"aimbot","aimbotui","aimbotgui"},{"aimbot (aimbotui,aimbotgui)","aimbot and yeah"},function()
 	pcall(function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"))();
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/slap11111/gay-script/refs/heads/main/NewAimbot.lua"))();
 	end)
 end)
 
