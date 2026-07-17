@@ -87,7 +87,7 @@ local Flags = {
     ["Aim/AimLock"] = true,
     ["Aim/KeybindEnabled"] = false,
     ["Aim/AimKey"] = "E",
-    ["Aim/AlwaysEnabled"] = true,
+    ["Aim/AlwaysEnabled"] = false,
     ["Aim/ShowAssistDots"] = false,
     ["Aim/TeamCheck"] = false,
     ["Aim/VisibilityCheck"] = true,
@@ -2792,7 +2792,7 @@ function UI.CreateWindow(title)
     UIState.ToggleVisible = ToggleVisible
 
     TrackConnection(UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if input.KeyCode == Enum.KeyCode.CapsLock then
+        if input.KeyCode == Enum.KeyCode.F1 then
             ToggleVisible()
         end
     end))
@@ -8688,7 +8688,7 @@ local KeyboardRows = {
         {Text = "pg up", Width = 1}
     },
     {
-        {Text = "caps", Key = "CapsLock", Width = 1.75, KeyCode = Enum.KeyCode.CapsLock, Name = "Toggle Menu Visibility", Action = "CapsLock", Desc = "Toggles visibility of the main gay script :3 aimbot menu GUI."},
+        {Text = "F1", Key = "F1", Width = 1.75, KeyCode = Enum.KeyCode.F1, Name = "Toggle Menu Visibility", Action = "F1", Desc = "Toggles visibility of the main gay script :3 aimbot menu GUI."},
         {Text = "A", Width = 1},
         {Text = "S", Width = 1},
         {Text = "D", Width = 1},
