@@ -57886,7 +57886,7 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 					local char = player.Character
 					local hum = char and char:FindFirstChildOfClass("Humanoid")
 					if char and hum and hum.Health > 0 then
-						local isR6 = char:FindFirstChild("Torso") ~= nil
+						local isR6 = hum.RigType == Enum.HumanoidRigType.R6
 						local rawLines = {}
 						local function getPartOrAttachmentPos(part, attName)
 							if not part then return nil end
