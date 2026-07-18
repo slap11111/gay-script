@@ -57863,16 +57863,14 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 			end
 
 			local function getPossibleNames(name)
-				local n = name:lower():gsub("%s+", "")
+				local n = name:lower():gsub("[%s_]+", "")
 				local list = {n}
 				if n:find("^left") then
 					local rest = n:sub(5)
 					table.insert(list, "l" .. rest)
-					table.insert(list, "l_" .. rest)
 				elseif n:find("^right") then
 					local rest = n:sub(6)
 					table.insert(list, "r" .. rest)
-					table.insert(list, "r_" .. rest)
 				end
 				return list
 			end
@@ -57887,7 +57885,7 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							return part
 						end
 					end
-					local targetName = name:lower():gsub("%s+", "")
+					local targetName = name:lower():gsub("[%s_]+", "")
 					if targetName == "uppertorso" or targetName == "lowertorso" then
 						return cache["torso"]
 					end
@@ -57920,12 +57918,12 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							cache.__childCount = #children
 							for _, child in ipairs(children) do
 								if child:IsA("BasePart") then
-									local cleanName = child.Name:lower():gsub("%s+", "")
+									local cleanName = child.Name:lower():gsub("[%s_]+", "")
 									cache[cleanName] = child
 									pcall(function()
 										for _, subChild in ipairs(child:GetChildren()) do
 											if subChild:IsA("Attachment") then
-												local attClean = cleanName .. "_" .. subChild.Name:lower():gsub("%s+", "")
+												local attClean = cleanName .. "_" .. subChild.Name:lower():gsub("[%s_]+", "")
 												cache[attClean] = subChild
 											end
 										end
@@ -57979,8 +57977,8 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							local function getPartOrAttachmentPos(part, attName)
 								if not part then return nil end
 								if cache and attName then
-									local partCleanName = part.Name:lower():gsub("%s+", "")
-									local attCleanName = attName:lower():gsub("%s+", "")
+									local partCleanName = part.Name:lower():gsub("[%s_]+", "")
+									local attCleanName = attName:lower():gsub("[%s_]+", "")
 									local att = cache[partCleanName .. "_" .. attCleanName]
 									if att then
 										local ok, pos = pcall(function()
