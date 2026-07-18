@@ -57990,20 +57990,22 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 								return part.Position
 							end
 							local connections = {
-								{"Head", "UpperTorso", "NeckRigAttachment", "NeckRigAttachment"},
-								{"UpperTorso", "LowerTorso", "WaistRigAttachment", "WaistRigAttachment"},
-								{"LowerTorso", "LeftUpperLeg", "LeftHipRigAttachment", "LeftHipRigAttachment"},
-								{"LeftUpperLeg", "LeftLowerLeg", "LeftKneeRigAttachment", "LeftKneeRigAttachment"},
-								{"LeftLowerLeg", "LeftFoot", "LeftAnkleRigAttachment", "LeftAnkleRigAttachment"},
-								{"LowerTorso", "RightUpperLeg", "RightHipRigAttachment", "RightHipRigAttachment"},
-								{"RightUpperLeg", "RightLowerLeg", "RightKneeRigAttachment", "RightKneeRigAttachment"},
-								{"RightLowerLeg", "RightFoot", "RightAnkleRigAttachment", "RightAnkleRigAttachment"},
-								{"UpperTorso", "LeftUpperArm", "LeftShoulderRigAttachment", "LeftShoulderRigAttachment"},
-								{"LeftUpperArm", "LeftLowerArm", "LeftElbowRigAttachment", "LeftElbowRigAttachment"},
-								{"LeftLowerArm", "LeftHand", "LeftWristRigAttachment", "LeftWristRigAttachment"},
-								{"UpperTorso", "RightUpperArm", "RightShoulderRigAttachment", "RightShoulderRigAttachment"},
-								{"RightUpperArm", "RightLowerArm", "RightElbowRigAttachment", "RightElbowRigAttachment"},
-								{"RightLowerArm", "RightHand", "RightWristRigAttachment", "RightWristRigAttachment"}
+								{"Head", "UpperTorso", nil, "NeckRigAttachment"},
+								{"UpperTorso", "UpperTorso", "NeckRigAttachment", "WaistRigAttachment"},
+								{"UpperTorso", "LowerTorso", "WaistRigAttachment", "LeftHipRigAttachment"},
+								{"UpperTorso", "LowerTorso", "WaistRigAttachment", "RightHipRigAttachment"},
+								{"UpperTorso", "LeftUpperArm", "LeftShoulderRigAttachment", "LeftElbowRigAttachment"},
+								{"LeftUpperArm", "LeftLowerArm", "LeftElbowRigAttachment", "LeftWristRigAttachment"},
+								{"LeftLowerArm", "LeftHand", "LeftWristRigAttachment", nil},
+								{"UpperTorso", "RightUpperArm", "RightShoulderRigAttachment", "RightElbowRigAttachment"},
+								{"RightUpperArm", "RightLowerArm", "RightElbowRigAttachment", "RightWristRigAttachment"},
+								{"RightLowerArm", "RightHand", "RightWristRigAttachment", nil},
+								{"LowerTorso", "LeftUpperLeg", "LeftHipRigAttachment", "LeftKneeRigAttachment"},
+								{"LeftUpperLeg", "LeftLowerLeg", "LeftKneeRigAttachment", "LeftAnkleRigAttachment"},
+								{"LeftLowerLeg", "LeftFoot", "LeftAnkleRigAttachment", nil},
+								{"LowerTorso", "RightUpperLeg", "RightHipRigAttachment", "RightKneeRigAttachment"},
+								{"RightUpperLeg", "RightLowerLeg", "RightKneeRigAttachment", "RightAnkleRigAttachment"},
+								{"RightLowerLeg", "RightFoot", "RightAnkleRigAttachment", nil}
 							}
 							
 							for _, pair in ipairs(connections) do
