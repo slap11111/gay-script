@@ -57909,7 +57909,7 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 
 			for _, player in ipairs(playersList) do
 				if player ~= localPlayer then
-					pcall(function()
+					local ok, err = pcall(function()
 					local char = player.Character
 					local hum = char and char:FindFirstChildOfClass("Humanoid")
 					if char and hum and hum.Health > 0 then
@@ -57935,11 +57935,13 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							charCache[char] = cache
 						end
 
-						local isR15 = (cache["uppertorso"] ~= nil or cache["lowertorso"] ~= nil or
-									   cache["leftupperarm"] ~= nil or cache["rightupperarm"] ~= nil or
-									   cache["leftupperleg"] ~= nil or cache["rightupperleg"] ~= nil or
-									   cache["lupperarm"] ~= nil or cache["rupperarm"] ~= nil or
-									   cache["lupperleg"] ~= nil or cache["rupperleg"] ~= nil)
+						local isR15 = false
+						for cleanName, _ in pairs(cache) do
+							if cleanName:find("upperarm") or cleanName:find("lowerarm") or cleanName:find("upperleg") or cleanName:find("lowerleg") or cleanName:find("uppertorso") or cleanName:find("lowertorso") then
+								isR15 = true
+								break
+							end
+						end
 						local isR6 = not isR15
 						local rawLines = {}
 						
@@ -58061,7 +58063,11 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							end
 						end
 					end
-				end) -- end pcall
+					end)
+					if not ok then
+						warn("[gay script :3 ESP error]:", err)
+					end
+				end
 			end
 			end
 		end))

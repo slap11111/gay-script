@@ -57955,11 +57955,13 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							charCache[char] = cache
 						end
 
-						local isR15 = (cache["uppertorso"] ~= nil or cache["lowertorso"] ~= nil or
-									   cache["leftupperarm"] ~= nil or cache["rightupperarm"] ~= nil or
-									   cache["leftupperleg"] ~= nil or cache["rightupperleg"] ~= nil or
-									   cache["lupperarm"] ~= nil or cache["rupperarm"] ~= nil or
-									   cache["lupperleg"] ~= nil or cache["rupperleg"] ~= nil)
+						local isR15 = false
+						for cleanName, _ in pairs(cache) do
+							if cleanName:find("upperarm") or cleanName:find("lowerarm") or cleanName:find("upperleg") or cleanName:find("lowerleg") or cleanName:find("uppertorso") or cleanName:find("lowertorso") then
+								isR15 = true
+								break
+							end
+						end
 						local isR6 = not isR15
 						local rawLines = {}
 						local function getPartOrAttachmentPos(part, attName)
