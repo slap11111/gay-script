@@ -58067,7 +58067,6 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 					end
 				end
 			end
-			end
 		end))
 	else
 		DoNotif("Skeleton ESP Disabled", 2, "ESP")
