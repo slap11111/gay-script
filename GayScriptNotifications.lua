@@ -34,7 +34,7 @@ local function _naNotifEnsureTable(host, key)
 end
 
 local _naNotif_private_registry = _naNotifGetPrivateRegistry()
-local _naNotif_private_root = _naNotifEnsureTable(_naNotif_private_registry, "__nameless_admin_private")
+local _naNotif_private_root = _naNotifEnsureTable(_naNotif_private_registry, "__gay_script_private")
 local _naNotif_env = _naNotifEnsureTable(_naNotif_private_root, "notifications")
 local _naNotif_owner_token = rawget(_naNotif_env, "__ownerToken")
 if type(_naNotif_owner_token) ~= "table" then
@@ -2186,10 +2186,10 @@ function NotifFuns.getDefaultNAIcon()
 		style.sockDrawer = style.bananaPeel
 		return style.sockDrawer
 	end
-	local assetsRoot = "Nameless-Admin"
+	local assetsRoot = "gay-script"
 	local assetsFolder = assetsRoot .. "/Assets"
 	local assetPath = assetsFolder .. "/NAnew.png"
-	local assetUrl = "https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/NAimages/NAnew.png"
+	local assetUrl = "https://raw.githubusercontent.com/slap11111/gay-script/main/NAimages/NAnew.png"
 	if type(isfolder) == "function" and type(makefolder) == "function" then
 		if not style.safeAssetCall(isfolder, assetsRoot) then
 			style.safeAssetCall(makefolder, assetsRoot)

@@ -315,20 +315,20 @@ guiii.draggerV2 = function(ui, dragui)
 		dragui.Active = true;
 	end);
 end;
-local repo = "ltseverydayyou/Nameless-Admin";
+local repo = "slap11111/gay-script";
 local br = "main";
 local chans = {
 	main = {
 		key = "main",
-		name = "Nameless Admin",
+		name = "Gay Script",
 		path = "Source.lua",
-		headRaw = "https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"
+		headRaw = "https://raw.githubusercontent.com/slap11111/gay-script/main/Source.lua"
 	},
 	test = {
 		key = "test",
 		name = "NA Testing",
 		path = "NA testing.lua",
-		headRaw = "https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/NA%20testing.lua"
+		headRaw = "https://raw.githubusercontent.com/slap11111/gay-script/main/NA%20testing.lua"
 	}
 };
 local function getCommits(ch, n)
@@ -631,7 +631,7 @@ barMask.BackgroundColor3 = C.b2;
 barMask.BorderSizePixel = 0;
 barMask.Position = UDim2.new(0, 0, 0.5, 0);
 barMask.Size = UDim2.new(1, 0, 0.5, 0);
-local t1 = txt(top, "Nameless Admin", 16, true, C.w0);
+local t1 = txt(top, "Gay Script", 16, true, C.w0);
 t1.Position = UDim2.new(0, 18, 0, 9);
 t1.Size = UDim2.new(1, -170, 0, 20);
 local t2 = txt(top, "Version picker", 12, false, C.w2);

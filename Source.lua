@@ -1,5 +1,5 @@
 --!nonstrict
--- © 2026 Nameless Admin. All rights reserved. Do not copy, paste, redistribute, or claim as your own.
+-- © 2026 Gay Script. All rights reserved. Do not copy, paste, redistribute, or claim as your own.
 
 local _na_boot = {
 	hostEnv = (getgenv and getgenv()) or _G or {},
@@ -38,7 +38,7 @@ _na_boot.ensureTable = function(host, key)
 	return value
 end
 _na_boot.privateRegistry = _na_boot.getPrivateRegistry()
-_na_boot.privateRoot = _na_boot.ensureTable(_na_boot.privateRegistry, "__nameless_admin_private")
+_na_boot.privateRoot = _na_boot.ensureTable(_na_boot.privateRegistry, "__gay_script_private")
 local _na_env = _na_boot.ensureTable(_na_boot.privateRoot, "testing")
 local _na_shared = _na_boot.ensureTable(_na_env, "shared")
 _na_boot.runtimeEnv = _na_boot.ensureTable(_na_env, "runtime")
@@ -4569,7 +4569,7 @@ NAmanage.LaunchExperience = NAmanage.LaunchExperience or function(params, opts)
 	end
 	local ok, result = pcall(function()
 		if opts.callback and service.LaunchExperienceFromSourceWithCallback then
-			return service:LaunchExperienceFromSourceWithCallback(launchParams, opts.source or "NamelessAdmin", opts.callback)
+			return service:LaunchExperienceFromSourceWithCallback(launchParams, opts.source or "GayScript", opts.callback)
 		end
 		if opts.source and service.LaunchExperienceFromSource then
 			return service:LaunchExperienceFromSource(launchParams, opts.source)
@@ -8503,7 +8503,7 @@ NAmanage.btUpdate=function(details, state)
 		return
 	end
 
-	local versionHover = (NAStuff and NAStuff.NAjson and NAStuff.NAjson.ver) or "Nameless Admin"
+	local versionHover = (NAStuff and NAStuff.NAjson and NAStuff.NAjson.ver) or "Gay Script"
 	local count = NAmanage.btCount or 0
 	local cfgRPC = (NAStuff.Integrations and NAStuff.Integrations.rpc) or {}
 	local placeLabel = placeName and placeName() or "Game"
@@ -8516,7 +8516,7 @@ NAmanage.btUpdate=function(details, state)
 			:gsub("{game}", tostring(placeLabel))
 	end
 
-	local displayDetails = details or adminName or "Nameless Admin"
+	local displayDetails = details or adminName or "Gay Script"
 	if cfgRPC.useCustom and cfgRPC.details and cfgRPC.details ~= "" then
 		displayDetails = applyTemplate(cfgRPC.details, displayDetails)
 	end
@@ -9738,38 +9738,38 @@ if type(NAStuff._df) == "function" then
 	end
 end
 local NAfiles = {
-	NAFILEPATH = "Nameless-Admin";
-	NANOMEDIAPATH = "Nameless-Admin/.nomedia";
-	NAWAYPOINTFILEPATH = "Nameless-Admin/Waypoints";
-	NAPLUGINFILEPATH = "Nameless-Admin/Plugins";
-	NAIYPLUGINFILEPATH = "Nameless-Admin/PluginsIY";
-	NAASSETSFILEPATH = "Nameless-Admin/Assets";
-	NAMAINSETTINGSPATH = "Nameless-Admin/Settings.json";
-	NAPREFIXPATH = "Nameless-Admin/Prefix.txt";
-	NABUTTONSIZEPATH = "Nameless-Admin/ButtonSize.txt";
-	NAUISIZEPATH = "Nameless-Admin/UIScale.txt";
-	NAQOTPATH = "Nameless-Admin/QueueOnTeleport.txt";
-	NAALIASPATH = "Nameless-Admin/Aliases.json";
-	NAUSERBUTTONSPATH = "Nameless-Admin/UserButtons.json";
-	NAAUTOEXECPATH = "Nameless-Admin/AutoExecCommands.json";
-	NAPREDICTIONPATH = "Nameless-Admin/Prediction.txt";
-	NASTROKETHINGY = "Nameless-Admin/NAUIStroker.txt";
-	NAJOINLEAVE = "Nameless-Admin/JoinLeave.json";
-	NAJOINLEAVELOG = "Nameless-Admin/JoinLeaveLog.txt";
-	NACHATLOGS = "Nameless-Admin/ChatLogs.txt";
-	NATOPBAR = "Nameless-Admin/TopBarApp.txt";
-	NANOTIFSTOGGLE = "Nameless-Admin/NotifsTgl.txt";
-	NABINDERS = "Nameless-Admin/Binders.json";
-	NAESPSETTINGSPATH = "Nameless-Admin/ESPSettings.json";
-	NATOPBARMODE = "Nameless-Admin/TopbarMode.txt";
-	NATEXTCHATSETTINGSPATH = "Nameless-Admin/TextChatSettings.json";
-	NACUSTOMFONTPATH = "Nameless-Admin/CustomFont";
-	NACUSTOMICONPATH = "Nameless-Admin/CustomIcon";
-	NACOMMANDKEYBINDS = "Nameless-Admin/CommandKeybinds.json";
-	NANOTEPADPATH = "Nameless-Admin/NA-Notepad";
-	NAFLYBINDSPATH = "Nameless-Admin/FlyBinds.json";
-	NAFFLAGSPATH = "Nameless-Admin/NAFFlags.json";
-	NAFFLAGSCONFIGPATH = "Nameless-Admin/NAFFlagsConfig.json";
+	NAFILEPATH = "gay-script";
+	NANOMEDIAPATH = "gay-script/.nomedia";
+	NAWAYPOINTFILEPATH = "gay-script/Waypoints";
+	NAPLUGINFILEPATH = "gay-script/Plugins";
+	NAIYPLUGINFILEPATH = "gay-script/PluginsIY";
+	NAASSETSFILEPATH = "gay-script/Assets";
+	NAMAINSETTINGSPATH = "gay-script/Settings.json";
+	NAPREFIXPATH = "gay-script/Prefix.txt";
+	NABUTTONSIZEPATH = "gay-script/ButtonSize.txt";
+	NAUISIZEPATH = "gay-script/UIScale.txt";
+	NAQOTPATH = "gay-script/QueueOnTeleport.txt";
+	NAALIASPATH = "gay-script/Aliases.json";
+	NAUSERBUTTONSPATH = "gay-script/UserButtons.json";
+	NAAUTOEXECPATH = "gay-script/AutoExecCommands.json";
+	NAPREDICTIONPATH = "gay-script/Prediction.txt";
+	NASTROKETHINGY = "gay-script/NAUIStroker.txt";
+	NAJOINLEAVE = "gay-script/JoinLeave.json";
+	NAJOINLEAVELOG = "gay-script/JoinLeaveLog.txt";
+	NACHATLOGS = "gay-script/ChatLogs.txt";
+	NATOPBAR = "gay-script/TopBarApp.txt";
+	NANOTIFSTOGGLE = "gay-script/NotifsTgl.txt";
+	NABINDERS = "gay-script/Binders.json";
+	NAESPSETTINGSPATH = "gay-script/ESPSettings.json";
+	NATOPBARMODE = "gay-script/TopbarMode.txt";
+	NATEXTCHATSETTINGSPATH = "gay-script/TextChatSettings.json";
+	NACUSTOMFONTPATH = "gay-script/CustomFont";
+	NACUSTOMICONPATH = "gay-script/CustomIcon";
+	NACOMMANDKEYBINDS = "gay-script/CommandKeybinds.json";
+	NANOTEPADPATH = "gay-script/NA-Notepad";
+	NAFLYBINDSPATH = "gay-script/FlyBinds.json";
+	NAFFLAGSPATH = "gay-script/NAFFlags.json";
+	NAFFLAGSCONFIGPATH = "gay-script/NAFFlagsConfig.json";
 }
 
 NAmanage.isFileAccessErr=NAmanage.isFileAccessErr or function(err)
@@ -9806,7 +9806,7 @@ NAmanage.NotifyFileWriteIssue=NAmanage.NotifyFileWriteIssue or function()
 	end
 	NAStuff.FileWriteIssueNotified = true
 	local issue = NAStuff.FileWriteIssue
-	local pathText = issue.path ~= "" and issue.path or "Nameless-Admin"
+	local pathText = issue.path ~= "" and issue.path or "gay-script"
 	DoNotif("Couldn't write to executor workspace ("..pathText.."). NA will keep loading, but settings/saved data won't persist until the folder is writable or the executor is run as admin.", 9, "File Access")
 end
 
@@ -14719,7 +14719,7 @@ NAmanage.loaderState = NAmanage.loaderState or {
 	loaded = false;
 	hideStartup = NAHideStartup == true;
 	hideStartupLoaded = false;
-	settingsPath = "Nameless-Admin/Settings.json";
+	settingsPath = "gay-script/Settings.json";
 }
 
 local function getAutoSkipSettingsPath()
@@ -14731,7 +14731,7 @@ local function getAutoSkipSettingsPath()
 	if type(NAfiles) == "table" and type(NAfiles.NAMAINSETTINGSPATH) == "string" then
 		return NAfiles.NAMAINSETTINGSPATH
 	end
-	return "Nameless-Admin/Settings.json"
+	return "gay-script/Settings.json"
 end
 
 local function getAutoSkipFromSettingsCache(state)
@@ -14783,11 +14783,11 @@ local function writeAutoSkipSettingsFile(path, enabled)
 	end
 
 	if type(NAmanage.safeMakeFolder) == "function" then
-		NAmanage.safeMakeFolder("Nameless-Admin")
+		NAmanage.safeMakeFolder("gay-script")
 	elseif type(makefolder) == "function" and type(isfolder) == "function" then
-		local okFolder, exists = pcall(isfolder, "Nameless-Admin")
+		local okFolder, exists = pcall(isfolder, "gay-script")
 		if not (okFolder and exists == true) then
-			pcall(makefolder, "Nameless-Admin")
+			pcall(makefolder, "gay-script")
 		end
 	end
 
@@ -14881,11 +14881,11 @@ NAmanage.writeHideStartupSettingsFile=function(path, enabled)
 	end
 
 	if type(NAmanage.safeMakeFolder) == "function" then
-		NAmanage.safeMakeFolder("Nameless-Admin")
+		NAmanage.safeMakeFolder("gay-script")
 	elseif type(makefolder) == "function" and type(isfolder) == "function" then
-		local okFolder, exists = pcall(isfolder, "Nameless-Admin")
+		local okFolder, exists = pcall(isfolder, "gay-script")
 		if not (okFolder and exists == true) then
-			pcall(makefolder, "Nameless-Admin")
+			pcall(makefolder, "gay-script")
 		end
 	end
 
@@ -17332,9 +17332,9 @@ repeat
 	NAAssetsLoading.ok, NAAssetsLoading.res = pcall(function()
 		local okFetch, sourceOrErr
 		if NAAssetsLoading and NAAssetsLoading.httpGetImportant then
-			okFetch, sourceOrErr = NAAssetsLoading.httpGetImportant("https://raw.githubusercontent.com/slap11111/gay-script/main/NamelessAdminNotifications.lua")
+			okFetch, sourceOrErr = NAAssetsLoading.httpGetImportant("https://raw.githubusercontent.com/slap11111/gay-script/main/GayScriptNotifications.lua")
 		else
-			okFetch, sourceOrErr = NAmanage.HttpGet("https://raw.githubusercontent.com/slap11111/gay-script/main/NamelessAdminNotifications.lua", { timeout = NAAssetsLoading.githubTimeoutSeconds or 5 })
+			okFetch, sourceOrErr = NAmanage.HttpGet("https://raw.githubusercontent.com/slap11111/gay-script/main/GayScriptNotifications.lua", { timeout = NAAssetsLoading.githubTimeoutSeconds or 5 })
 		end
 		if not okFetch then
 			error(sourceOrErr or "notification fetch failed")
@@ -17958,51 +17958,51 @@ end
 NAEXECDATA = NAEXECDATA or {commands = {}, args = {}}
 doPREDICTION = true
 -- make it so It's easier for IY users to move to nameless admin (yes i did this and it's funny)
-local NamelessMigrate = {}
-NamelessMigrate.IY_FE = {}
-function NamelessMigrate:LoadIY_FE()
+local GayScriptMigrate = {}
+GayScriptMigrate.IY_FE = {}
+function GayScriptMigrate:LoadIY_FE()
 	if FileSupport then
 		-- check if IY was installed
 		if isfile("IY_FE.iy") then
 			local success, content = NACaller(readfile, "IY_FE.iy")
 			if success and content then
-				NamelessMigrate.IY_FE = HttpService:JSONDecode(content)
+				GayScriptMigrate.IY_FE = HttpService:JSONDecode(content)
 				DoNotif("Some Settings have been imported from Infinite Yield")
 			end
 		end
 	end
-	NamelessMigrate.LoadIY_FE = function() end -- too lazy to make a proper check just override it
+	GayScriptMigrate.LoadIY_FE = function() end -- too lazy to make a proper check just override it
 	return
 end
-function NamelessMigrate:Prefix()
-	NamelessMigrate:LoadIY_FE()
+function GayScriptMigrate:Prefix()
+	GayScriptMigrate:LoadIY_FE()
 	if FileSupport then
-		if NamelessMigrate.IY_FE then
-			return NamelessMigrate.IY_FE["prefix"] or nil
+		if GayScriptMigrate.IY_FE then
+			return GayScriptMigrate.IY_FE["prefix"] or nil
 		end
 	end
 	return nil
 end
 
-function NamelessMigrate:UiSize()
-	NamelessMigrate:LoadIY_FE()
+function GayScriptMigrate:UiSize()
+	GayScriptMigrate:LoadIY_FE()
 	if FileSupport then
-		if NamelessMigrate.IY_FE then
-			return tostring(NamelessMigrate.IY_FE["guiScale"]) or nil
+		if GayScriptMigrate.IY_FE then
+			return tostring(GayScriptMigrate.IY_FE["guiScale"]) or nil
 		end
 	end
 	return nil
 end
 
-function NamelessMigrate:Waypoints()
-	NamelessMigrate:LoadIY_FE()
+function GayScriptMigrate:Waypoints()
+	GayScriptMigrate:LoadIY_FE()
 	if not FileSupport then
 		return
 	end
 
-	if NamelessMigrate.IY_FE then
+	if GayScriptMigrate.IY_FE then
 		local Objects = {}
-		for i,v in NamelessMigrate.IY_FE["WayPoints"] or {} do
+		for i,v in GayScriptMigrate.IY_FE["WayPoints"] or {} do
 			if not Objects[v.GAME] then
 				Objects[v.GAME] = {}
 			end
@@ -18100,7 +18100,7 @@ NAmanage.NASettingsGetSchema=function()
 		prefix = {
 			pathKey = "NAPREFIXPATH";
 			default = function()
-				return NamelessMigrate:Prefix() or ";"
+				return GayScriptMigrate:Prefix() or ";"
 			end;
 			coerce = function(value)
 				if type(value) ~= "string" then
@@ -18256,7 +18256,7 @@ NAmanage.NASettingsGetSchema=function()
 		uiScale = {
 			pathKey = "NAUISIZEPATH";
 			default = function()
-				local migrated = NamelessMigrate:UiSize()
+				local migrated = GayScriptMigrate:UiSize()
 				local numberValue = tonumber(migrated)
 				if not numberValue or numberValue <= 0 then
 					numberValue = 1
@@ -20187,7 +20187,7 @@ NAmanage.NASettingsEnsure=function()
 		NAStuff.NASettingsData.offVisOTr = NAStuff.NASettingsData.offsetVisualizerOutlineTransparency
 	end
 
-	local legacyIconPath = "Nameless-Admin/IconPosition.json"
+	local legacyIconPath = "gay-script/IconPosition.json"
 	if FileSupport and type(isfile) == "function" and NAmanage.safeIsFile(legacyIconPath) then
 		local okRaw, legacyRaw = NACaller(readfile, legacyIconPath)
 		if okRaw and type(legacyRaw) == "string" and legacyRaw ~= "" then
@@ -20636,7 +20636,7 @@ function NAmanage.deltaPopup()
 	end
 	NAStuff.deltaPrompted = true
 	pcall(NAmanage.NASettingsSet, "deltaPrompted", true)
-	local popupTitle = (adminName and (adminName.." Notice")) or "Nameless Admin"
+	local popupTitle = (adminName and (adminName.." Notice")) or "Gay Script"
 	local popupDescription = "gay script :3 detected that you are using the Delta executor. This is a one-time reminder, so run it now to test Delta Customization or copy the script if you want to keep the script permanently."
 	if type(Popup) == "function" then
 		Popup({
@@ -20717,7 +20717,7 @@ if FileSupport then
 			if NAensureFolder(NAfiles.NAWAYPOINTFILEPATH) then
 				-- imagine if it didn't make the folder
 				if NAmanage.safeIsFolder(NAfiles.NAWAYPOINTFILEPATH) then
-					NamelessMigrate:Waypoints()
+					GayScriptMigrate:Waypoints()
 				end
 			end
 		end
@@ -22582,10 +22582,10 @@ function NAmanage.clnList()
 			label = "[Clear Entire Folder]",
 			path = NAfiles.NAFILEPATH,
 			kind = "folder",
-			displayType = "Nameless-Admin folder",
+			displayType = "gay-script folder",
 			removeRoot = true,
 			recreate = true,
-			success = "Nameless-Admin folder cleared.",
+			success = "gay-script folder cleared.",
 		})
 	end
 
@@ -22637,7 +22637,7 @@ function NAmanage.openSettingsCleanupPopup()
 
 	local buttons = NAmanage.buildSettingsCleanupButtons()
 	if #buttons == 0 then
-		DoNotif("No saved Nameless-Admin files or folders were found.", 3)
+		DoNotif("No saved gay-script files or folders were found.", 3)
 		return
 	end
 
@@ -26069,7 +26069,7 @@ NAmanage.ExecutorScriptsStripExt = function(name)
 end
 
 NAmanage.ExecutorScriptsBase = function()
-	local base = "Nameless-Admin/NA-Exec"
+	local base = "gay-script/NA-Exec"
 	return base, base.."/Scripts", base.."/scripts.json"
 end
 
@@ -37667,7 +37667,7 @@ NAmanage.InitPlugs=function()
 
 	cmd.add(
 		{"addallplugins","addplugins","aap","aaplugs"},
-		{"addallplugins","Move all .na to Nameless-Admin/Plugins and all .iy to Nameless-Admin/PluginsIY, then load them"},
+		{"addallplugins","Move all .na to gay-script/Plugins and all .iy to gay-script/PluginsIY, then load them"},
 		function()
 			mk(plugsDirNA)
 			mk(plugsDirIY)
@@ -37804,7 +37804,7 @@ NAmanage.InitPlugs=function()
 
 	cmd.add(
 		{"removeplugin","rmplugin","delplugin","rmp"},
-		{"removeplugin","Move a plugin file from Nameless-Admin/Plugins or Nameless-Admin/PluginsIY back to workspace"},
+		{"removeplugin","Move a plugin file from gay-script/Plugins or gay-script/PluginsIY back to workspace"},
 		function()
 			if not (isfolder(plugsDirNA) or isfolder(plugsDirIY)) then DoNotif("Plugins folder not found",3); return end
 			local btns = {}
@@ -37850,7 +37850,7 @@ NAmanage.InitPlugs=function()
 
 	cmd.add(
 		{"removeallplugins","rmaplugins","clearplugins","rmap","rmaplugs"},
-		{"removeallplugins","Move all plugins from Nameless-Admin/Plugins and Nameless-Admin/PluginsIY back to workspace"},
+		{"removeallplugins","Move all plugins from gay-script/Plugins and gay-script/PluginsIY back to workspace"},
 		function()
 			if not (isfolder(plugsDirNA) or isfolder(plugsDirIY)) then DoNotif("Plugins folder not found",3); return end
 			local moved, errs = {}, 0
@@ -48475,7 +48475,7 @@ local s,err = pcall(function()
 		if type(registry) ~= "table" then
 			registry = env
 		end
-		local root = type(registry) == "table" and rawget(registry, "__nameless_admin_private") or nil
+		local root = type(registry) == "table" and rawget(registry, "__gay_script_private") or nil
 		return type(root) == "table" and root or nil
 	end
 	local function resolveService(name)
@@ -57850,6 +57850,26 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 			local localPlayer = Players.LocalPlayer
 			local playersList = Players:GetPlayers()
 
+			local function findPart(char, name)
+				local targetName = name:lower():gsub("%s+", "")
+				for _, child in ipairs(char:GetChildren()) do
+					if child:IsA("BasePart") then
+						local childName = child.Name:lower():gsub("%s+", "")
+						if childName == targetName then
+							return child
+						end
+					end
+				end
+				if targetName == "uppertorso" or targetName == "lowertorso" then
+					for _, child in ipairs(char:GetChildren()) do
+						if child:IsA("BasePart") and child.Name:lower() == "torso" then
+							return child
+						end
+					end
+				end
+				return nil
+			end
+
 			for player, lines in pairs(NAStuff.SkeletonDrawings) do
 				if not player.Parent or not player.Character then
 					for _, line in ipairs(lines) do
@@ -57868,7 +57888,17 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 					local char = player.Character
 					local hum = char and char:FindFirstChildOfClass("Humanoid")
 					if char and hum and hum.Health > 0 then
-						local isR6 = hum.RigType == Enum.HumanoidRigType.R6
+						local isR15 = false
+						for _, child in ipairs(char:GetChildren()) do
+							if child:IsA("BasePart") then
+								local nameL = child.Name:lower()
+								if nameL == "uppertorso" or nameL == "upper torso" or nameL == "lowertorso" or nameL == "lower torso" then
+									isR15 = true
+									break
+								end
+							end
+						end
+						local isR6 = not isR15
 						local rawLines = {}
 						
 						local function getPos(part, offset)
@@ -57931,8 +57961,8 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 							}
 							
 							for _, pair in ipairs(connections) do
-								local partA = char:FindFirstChild(pair[1])
-								local partB = char:FindFirstChild(pair[2])
+								local partA = findPart(char, pair[1])
+								local partB = findPart(char, pair[2])
 								if partA and partB and partA:IsA("BasePart") and partB:IsA("BasePart") then
 									local posAW = getPartOrAttachmentPos(partA, pair[3])
 									local posBW = getPartOrAttachmentPos(partB, pair[4])
@@ -59179,7 +59209,7 @@ NAStuff.storedAnims = NAStuff.storedAnims or {}
 NAStuff.savedAnims = NAStuff.savedAnims or {}
 builderAnim = nil
 
-NAmanage.animBuilderPath = NAmanage.animBuilderPath or (((NAfiles and NAfiles.NAFILEPATH) or "Nameless-Admin").."/AnimBuilder.json")
+NAmanage.animBuilderPath = NAmanage.animBuilderPath or (((NAfiles and NAfiles.NAFILEPATH) or "gay-script").."/AnimBuilder.json")
 
 NAmanage.abFileOk=function()
 	return type(isfile) == "function"
@@ -59191,7 +59221,7 @@ NAmanage.abFileOk=function()
 end
 
 NAmanage.abDir=function()
-	local dir = (NAfiles and NAfiles.NAFILEPATH) or "Nameless-Admin"
+	local dir = (NAfiles and NAfiles.NAFILEPATH) or "gay-script"
 	if type(isfolder) ~= "function" or type(makefolder) ~= "function" then
 		return
 	end
@@ -72188,12 +72218,12 @@ cmd.add({"unheadstand"}, {"unheadstand", "Stop the headstand command."}, functio
 	standParts = {}
 end)
 
-_na_env.NamelessWs = nil
-_na_env.NamelessSpeed = nil
+_na_env.GayScriptWs = nil
+_na_env.GayScriptSpeed = nil
 NAStuff.loopws = false
 
 NAmanage.GetVelocityWalkSpeedValue = function()
-	return tonumber(_na_env.NamelessSpeed)
+	return tonumber(_na_env.GayScriptSpeed)
 end
 
 NAmanage.IsCharacterFullyNoClip = function(char)
@@ -72717,52 +72747,52 @@ NAmanage.SyncSpeedMethodState = function()
 	NAmanage.StopVelocityWalkSpeed()
 	NAmanage.StopLegacyLoopWalkSpeed()
 	if NAStuff.SafeSpeedMethod ~= false then
-		if NAStuff.loopws and tonumber(_na_env.NamelessWs) then
-			_na_env.NamelessSpeed = tonumber(_na_env.NamelessWs)
+		if NAStuff.loopws and tonumber(_na_env.GayScriptWs) then
+			_na_env.GayScriptSpeed = tonumber(_na_env.GayScriptWs)
 		end
 		NAStuff.loopws = false
-		_na_env.NamelessWs = nil
+		_na_env.GayScriptWs = nil
 		NAmanage.RefreshVelocityWalkSpeed()
 		return
 	end
-	if NAStuff.loopws and tonumber(_na_env.NamelessWs) then
-		NAmanage.StartLegacyLoopWalkSpeed(tonumber(_na_env.NamelessWs))
-	elseif tonumber(_na_env.NamelessSpeed) then
-		NAmanage.ApplyWalkSpeed(tonumber(_na_env.NamelessSpeed))
+	if NAStuff.loopws and tonumber(_na_env.GayScriptWs) then
+		NAmanage.StartLegacyLoopWalkSpeed(tonumber(_na_env.GayScriptWs))
+	elseif tonumber(_na_env.GayScriptSpeed) then
+		NAmanage.ApplyWalkSpeed(tonumber(_na_env.GayScriptSpeed))
 	end
 end
 
 cmd.add({"loopwalkspeed", "loopws", "lws"}, {"loopwalkspeed <number> (loopws,lws)", "Loop walkspeed"}, function(...)
 	local val = tonumber(...) or 16
 	if NAStuff.SafeSpeedMethod ~= false then
-		_na_env.NamelessSpeed = val
+		_na_env.GayScriptSpeed = val
 		NAStuff.loopws = false
-		_na_env.NamelessWs = nil
+		_na_env.GayScriptWs = nil
 		NAmanage.RefreshVelocityWalkSpeed()
 		return
 	end
-	_na_env.NamelessWs = val
+	_na_env.GayScriptWs = val
 	NAStuff.loopws = true
 	NAmanage.StartLegacyLoopWalkSpeed(val)
 end, true)
 
 cmd.add({"unloopwalkspeed", "unloopws", "unlws", "unspeed"}, {"unloopwalkspeed", "Disable loop walkspeed"}, function()
 	if NAStuff.SafeSpeedMethod ~= false then
-		_na_env.NamelessSpeed = nil
+		_na_env.GayScriptSpeed = nil
 		NAmanage.StopVelocityWalkSpeed()
 		return
 	end
 	NAStuff.loopws = false
-	_na_env.NamelessWs = nil
+	_na_env.GayScriptWs = nil
 	NAmanage.StopLegacyLoopWalkSpeed()
 end)
 
-_na_env.NamelessJP = nil
+_na_env.GayScriptJP = nil
 NAStuff.loopjp = false
 
 cmd.add({"loopjumppower", "loopjp", "ljp"}, {"loopjumppower <number> (loopjp,ljp)", "Loop JumpPower"}, function(...)
 	local val = tonumber(...) or 50
-	_na_env.NamelessJP = val
+	_na_env.GayScriptJP = val
 	NAStuff.loopjp = true
 
 	NAlib.disconnect("loopjp_apply")
@@ -74124,8 +74154,8 @@ cmd.addPatched({"reserveserver","privateserver","ps","rs"},{"reserveserver [code
 		buttons[#buttons+1]={Text=instanceIdToUse and "Join instance + access" or "Join linkCode",Callback=defaultJoin}
 		buttons[#buttons+1]={Text="Copy debug payload",Callback=copyCurrentDebug}
 		addVariantButton("Join linkCode","linkPlace")
-		addVariantButton("Join link FromSource","linkPlace",{source="NamelessAdminReserveServer"})
-		addVariantButton("Join link Callback","linkPlace",{source="NamelessAdminReserveServer",callback=function(...)
+		addVariantButton("Join link FromSource","linkPlace",{source="GayScriptReserveServer"})
+		addVariantButton("Join link Callback","linkPlace",{source="GayScriptReserveServer",callback=function(...)
 			NAmanage.ExperienceDebugRecord("Launch callback",NAmanage.ExperienceDebugValue({...}))
 			NAmanage.ExperienceDebugSnapshot("Launch callback")
 		end})
@@ -79735,7 +79765,7 @@ cmd.add({"breakvelocity","breakv","bvel","zvel","zerovel","stopvel","brkvel"},{"
 	until time()>=stopAt or not char.Parent
 end)
 
-_na_env.NamelessMaxSlopeAngle = nil
+_na_env.GayScriptMaxSlopeAngle = nil
 NAStuff.loopmsa = false
 
 local function applyMaxSlopeAngle(amount, notify)
@@ -79762,7 +79792,7 @@ end,true)
 cmd.add({"loopmaxslopeangle", "loopmsa", "lmsa"}, {"loopmaxslopeangle <number> (loopmsa,lmsa)", "Loop MaxSlopeAngle"}, function(...)
 	local args = {...}
 	local amount = tonumber(args[1]) or 89
-	_na_env.NamelessMaxSlopeAngle = amount
+	_na_env.GayScriptMaxSlopeAngle = amount
 	NAStuff.loopmsa = true
 
 	NAlib.disconnect("loopmsa_apply")
@@ -79790,7 +79820,7 @@ end,true)
 
 cmd.add({"unloopmaxslopeangle", "unloopmsa", "unlmsa"}, {"unloopmaxslopeangle (unloopmsa,unlmsa)", "Disable loop MaxSlopeAngle"}, function()
 	NAStuff.loopmsa = false
-	_na_env.NamelessMaxSlopeAngle = nil
+	_na_env.GayScriptMaxSlopeAngle = nil
 	NAlib.disconnect("loopmsa_apply")
 	NAlib.disconnect("loopmsa_char")
 end)
@@ -91035,7 +91065,7 @@ cmd.add({"ws", "speed", "walkspeed"}, {"walkspeed <number> (speed,ws)", "Sets yo
 	local a = {...}
 	local s = tonumber(a[2] or a[1]) or 16
 	if s then
-		_na_env.NamelessSpeed = s
+		_na_env.GayScriptSpeed = s
 		if NAStuff.SafeSpeedMethod ~= false then
 			NAmanage.RefreshVelocityWalkSpeed()
 		else
@@ -96445,7 +96475,7 @@ NAmanage.MusicWindowInit = NAmanage.MusicWindowInit or function()
 	NAlib.disconnect("NA_MusicRows")
 	st.ready = true
 	st.frame = frame
-	st.root = "Nameless-Admin/Music"
+	st.root = "gay-script/Music"
 	st.cfgPath = st.root.."/_config.json"
 	st.exts = {mp3=true,ogg=true,flac=true,wav=true}
 	st.mode = st.mode or "off"
@@ -96615,7 +96645,7 @@ NAmanage.MusicWindowInit = NAmanage.MusicWindowInit or function()
 			empty.FontFace = Font.new("rbxasset://fonts/families/Roboto.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
 			empty.TextWrapped = true
 			empty.TextYAlignment = Enum.TextYAlignment.Top
-			empty.Text = "Drop mp3/ogg/flac/wav files into Nameless-Admin/Music, or paste an asset id/URL above."
+			empty.Text = "Drop mp3/ogg/flac/wav files into gay-script/Music, or paste an asset id/URL above."
 			empty.Size = UDim2.new(1, -4, 0, 52)
 			empty.Parent = list
 			return
@@ -96708,7 +96738,7 @@ NAmanage.MusicWindowInit = NAmanage.MusicWindowInit or function()
 			if item and item.asset then return item.asset, item.name end
 			return nil, nil, err or "Failed to load URL."
 		end
-		if ext(q) then return nil, nil, "Local audio file not found in Nameless-Admin/Music." end
+		if ext(q) then return nil, nil, "Local audio file not found in gay-script/Music." end
 		return nil, nil, "Enter a valid asset id, URL, or local filename."
 	end
 	local function nextTrack()
@@ -107405,7 +107435,7 @@ NAmanage.Executor_Init = NAmanage.Executor_Init or function()
 		return nil
 	end
 	NAmanage.Executor_SaveFrameSize = saveExecutorFrameSize
-	local baseExecDir = "Nameless-Admin"
+	local baseExecDir = "gay-script"
 	local execDir = baseExecDir.."/NA-Exec"
 	local settingsFile = execDir.."/settings.json"
 	local tabsFile = execDir.."/tabs.json"
@@ -110353,7 +110383,7 @@ NAmanage.Notepad_Init = function()
 		child:Destroy()
 	end
 
-	local dir = (NAfiles and NAfiles.NANOTEPADPATH) or "Nameless-Admin/NA-Notepad"
+	local dir = (NAfiles and NAfiles.NANOTEPADPATH) or "gay-script/NA-Notepad"
 	local idx = dir.."/index.json"
 	local fsOk = type(isfolder) == "function" and type(makefolder) == "function" and type(isfile) == "function" and type(readfile) == "function" and type(writefile) == "function"
 	local delOk = type(delfile) == "function"
@@ -110473,7 +110503,7 @@ NAmanage.Notepad_Init = function()
 				end
 			end
 		end
-		mk("Nameless-Admin")
+		mk("gay-script")
 		mk(dir)
 		return ok
 	end
@@ -117683,7 +117713,7 @@ function Swoosh()
 	end)
 end
 
-function mainNameless()
+function mainGayScript()
 	local txtLabel = TextLabel
 	local hideStartup = type(NAmanage.isStartupHidden) == "function" and NAmanage.isStartupHidden() == true
 	local showIntroLabel = not hideStartup and not (NAmanage.jlCfg and NAmanage.jlCfg.IconLabel == false)
@@ -117778,7 +117808,7 @@ function mainNameless()
 	end
 end
 
-coroutine.wrap(mainNameless)()
+coroutine.wrap(mainGayScript)()
 if NAmanage.Topbar_Init then
 	pcall(NAmanage.Topbar_Init)
 end
@@ -117786,7 +117816,7 @@ if NAmanage.SideSwipe_Init then
 	pcall(NAmanage.SideSwipe_Init)
 end
 if NAmanage.finishLoadingUI then
-	NAStuff._mainNamelessReady = true
+	NAStuff._mainGayScriptReady = true
 	if NAmanage.completeStartupLoading then
 		NAmanage.completeStartupLoading("ready")
 	end
@@ -117955,11 +117985,11 @@ SpawnCall(function()
 			local testing = readGuardValue("NATestingVer", env) == true
 
 			local resolvedName = tostring(adminName or "")
-			if resolvedName ~= "NA" and resolvedName ~= "Nameless Admin" and resolvedName ~= "NA Testing" and resolvedName ~= "gay script :3" then
-				resolvedName = testing and "NA Testing" or "Nameless Admin"
+			if resolvedName ~= "NA" and resolvedName ~= "Gay Script" and resolvedName ~= "NA Testing" and resolvedName ~= "gay script :3" then
+				resolvedName = testing and "NA Testing" or "Gay Script"
 			end
 			if resolvedName == "" then
-				resolvedName = testing and "NA Testing" or "Nameless Admin"
+				resolvedName = testing and "NA Testing" or "Gay Script"
 			end
 
 			if type(env.adminName) ~= "string" or env.adminName == "" then
@@ -132622,4 +132652,4 @@ end)
 
 )]]
 
--- © 2026 Nameless Admin. All rights reserved. Do not copy, paste, redistribute, or claim as your own.
+-- © 2026 Gay Script. All rights reserved. Do not copy, paste, redistribute, or claim as your own.

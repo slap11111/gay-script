@@ -180,6 +180,94 @@ local Flags = {
     ["LocalUI/ScreenUIOpacity"] = 90
 }
 
+local function LoadConfig()
+    local HttpService = game:GetService("HttpService")
+    if isfile and readfile and isfile("gay_script_aimbot_config.json") then
+        local success, content = pcall(readfile, "gay_script_aimbot_config.json")
+        if success and content then
+            local success2, decoded = pcall(function()
+                return HttpService:JSONDecode(content)
+            end)
+            if success2 and typeof(decoded) == "table" then
+                for k, v in pairs(decoded) do
+                    if Flags[k] ~= nil then
+                        if type(v) == "table" and type(Flags[k]) == "table" then
+                            for subK, subV in pairs(v) do
+                                Flags[k][subK] = subV
+                            end
+                        else
+                            Flags[k] = v
+                        end
+                    end
+                end
+                print("[gay script :3 aimbot] Configuration loaded successfully.")
+            end
+        end
+    end
+end
+
+local function SaveConfig()
+    local HttpService = game:GetService("HttpService")
+    if writefile then
+        local success, err = pcall(function()
+            local serializable = {}
+            for k, v in pairs(Flags) do
+                if type(v) == "table" then
+                    local serializableSub = {}
+                    for subK, subV in pairs(v) do
+                        if type(subV) ~= "function" and type(subV) ~= "userdata" then
+                            serializableSub[subK] = subV
+                        end
+                    end
+                    serializable[k] = serializableSub
+                elseif type(v) ~= "function" and type(v) ~= "userdata" then
+                    serializable[k] = v
+                end
+            end
+            writefile("gay_script_aimbot_config.json", HttpService:JSONEncode(serializable))
+        end)
+        if success then
+            if UI and UI.Notify then
+                UI.Notify("Config", "Configuration saved successfully!", 3)
+            else
+                print("[gay script :3 aimbot] Configuration saved successfully.")
+            end
+        else
+            if UI and UI.Notify then
+                UI.Notify("Config", "Failed to save configuration: " .. tostring(err), 5)
+            else
+                warn("[gay script :3 aimbot] Failed to save configuration: " .. tostring(err))
+            end
+        end
+    else
+        if UI and UI.Notify then
+            UI.Notify("Config", "Exploit does not support writefile!", 5)
+        else
+            warn("[gay script :3 aimbot] Exploit does not support writefile!")
+        end
+    end
+end
+
+local function UpdateUIVisuals()
+    if not UIState or not UIState.Updaters then return end
+    for flag, value in pairs(Flags) do
+        local updater = UIState.Updaters[flag]
+        if updater then
+            if type(updater) == "function" then
+                pcall(updater, value)
+            elseif type(updater) == "table" and type(value) == "table" then
+                for k, v in pairs(value) do
+                    if type(updater[k]) == "function" then
+                        pcall(updater[k], v)
+                    end
+                end
+            end
+        end
+    end
+end
+
+pcall(LoadConfig)
+
 if SAFE_MODE then
     Flags["Aim/AimLock"]        = false
     Flags["Aim/AlwaysEnabled"]  = false
@@ -10429,6 +10517,21 @@ UI.CreateButton(MiscTab, "Unload Script", Cleanup)
 UI.CreateButton(MiscTab, "Force Reload (Reload latest script version from GitHub)", ForceReload)
 
 UI.CreateSection(MiscTab, "Configuration")
+
+UI.CreateButton(MiscTab, "Save Config", SaveConfig)
+UI.CreateButton(MiscTab, "Load Config", function()
+    LoadConfig()
+    if SAFE_MODE then
+        Flags["Aim/AimLock"]        = false
+        Flags["Aim/AlwaysEnabled"]  = false
+        Flags["ShootBot/Enabled"]   = false
+        Flags["Misc/QTeleport"]     = false
+    end
+    UpdateUIVisuals()
+    if UI and UI.Notify then
+        UI.Notify("Config", "Configuration loaded successfully!", 3)
+    end
+end)
 
 do
     local smRow = Instance.new("Frame")

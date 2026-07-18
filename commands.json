@@ -10,7 +10,7 @@
       ],
       "usage": "addallplugins",
       "args": "",
-      "desc": "Move all .na to Nameless-Admin/Plugins and all .iy to Nameless-Admin/PluginsIY, then load them"
+      "desc": "Move all .na to gay-script/Plugins and all .iy to gay-script/PluginsIY, then load them"
     },
     {
       "name": "addplugin",
@@ -45,7 +45,7 @@
       ],
       "usage": "removeplugin",
       "args": "",
-      "desc": "Move a plugin file from Nameless-Admin/Plugins or Nameless-Admin/PluginsIY back to workspace"
+      "desc": "Move a plugin file from gay-script/Plugins or gay-script/PluginsIY back to workspace"
     },
     {
       "name": "removeallplugins",
@@ -58,7 +58,7 @@
       ],
       "usage": "removeallplugins",
       "args": "",
-      "desc": "Move all plugins from Nameless-Admin/Plugins and Nameless-Admin/PluginsIY back to workspace"
+      "desc": "Move all plugins from gay-script/Plugins and gay-script/PluginsIY back to workspace"
     },
     {
       "name": "cmdbar2",

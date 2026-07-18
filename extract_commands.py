@@ -239,7 +239,7 @@ def parse_engine_settings_commands(filecontent: str):
 
 def main():
 	parser = argparse.ArgumentParser(
-		description="Extract commands from Nameless Admin Source.lua"
+		description="Extract commands from Gay Script Source.lua"
 	)
 	parser.add_argument("--source", default="Source.lua", help="Path to Source.lua")
 	parser.add_argument("--output", default="commands.json", help="Output JSON file")

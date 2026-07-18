@@ -459,7 +459,7 @@ local function naManage()
 				return direct
 			end
 
-			local rootEnv = rawget(env, "__nameless_admin_private")
+			local rootEnv = rawget(env, "__gay_script_private")
 			local testEnv = type(rootEnv) == "table" and rawget(rootEnv, "testing") or nil
 			local sharedState = type(testEnv) == "table" and rawget(testEnv, "shared") or nil
 			local nested = type(sharedState) == "table" and (rawget(sharedState, "NAmanage") or rawget(sharedState, "__NAmanage")) or nil

@@ -3,10 +3,10 @@ local function getImageAsset(fileName, fallback)
 	if type(getcustomasset) ~= "function" then
 		return fallback;
 	end;
-	local assetsRoot = "Nameless-Admin";
+	local assetsRoot = "gay-script";
 	local assetsFolder = assetsRoot .. "/Assets";
 	local assetPath = assetsFolder .. "/" .. fileName;
-	local assetUrl = "https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/NAimages/" .. fileName;
+	local assetUrl = "https://raw.githubusercontent.com/slap11111/gay-script/main/NAimages/" .. fileName;
 	local function safeCall(fn, ...)
 		if type(fn) ~= "function" then
 			return nil;
@@ -3268,7 +3268,7 @@ G2L["music_folder"].TextXAlignment = Enum.TextXAlignment.Right;
 G2L["music_folder"].TextSize = 12;
 G2L["music_folder"].TextColor3 = Color3.fromRGB(170, 170, 185);
 G2L["music_folder"].FontFace = Font.new("rbxasset://fonts/families/Roboto.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-G2L["music_folder"].Text = "Nameless-Admin/Music";
+G2L["music_folder"].Text = "gay-script/Music";
 G2L["music_folder"].Size = UDim2.new(1, -292, 1, 0);
 G2L["music_folder"].Position = UDim2.new(0, 292, 0, 0);
 G2L["music_list"] = Instance.new("ScrollingFrame", G2L["music_container"]);

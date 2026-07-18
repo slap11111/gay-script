@@ -604,5 +604,5 @@ else
 end;
 ((ClonedService("Players")).LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")).Died:Connect(function()
 	wait(1);
-	(loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/2016%20anims")))();
+	(loadstring(game:HttpGet("https://raw.githubusercontent.com/slap11111/gay-script/main/2016%20anims")))();
 end);

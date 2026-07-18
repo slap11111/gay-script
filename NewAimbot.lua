@@ -2,7 +2,7 @@
 -- ║            gay script :3 aimbot                                  ║
 -- ╠══════════════════════════════════════════════════════════════════╣
 -- ║  Developer: cat                                                  ║
--- ║  Helpers: fanta, zosua, R1ZE                                           ║
+-- ║  Helpers: fanta, zosua                                           ║
 -- ║  Version: 4.2.5                                                  ║
 -- ╚══════════════════════════════════════════════════════════════════╝
 
@@ -85,9 +85,7 @@ local AimState = {
 }
 local Flags = {
     ["Aim/AimLock"] = true,
-    ["Aim/KeybindEnabled"] = false,
-    ["Aim/AimKey"] = "E",
-    ["Aim/AlwaysEnabled"] = false,
+    ["Aim/AlwaysEnabled"] = true,
     ["Aim/ShowAssistDots"] = false,
     ["Aim/TeamCheck"] = false,
     ["Aim/VisibilityCheck"] = true,
@@ -182,226 +180,100 @@ local Flags = {
     ["LocalUI/ScreenUIOpacity"] = 90
 }
 
+local function LoadConfig()
+    local HttpService = game:GetService("HttpService")
+    if isfile and readfile and isfile("gay_script_aimbot_config.json") then
+        local success, content = pcall(readfile, "gay_script_aimbot_config.json")
+        if success and content then
+            local success2, decoded = pcall(function()
+                return HttpService:JSONDecode(content)
+            end)
+            if success2 and typeof(decoded) == "table" then
+                for k, v in pairs(decoded) do
+                    if Flags[k] ~= nil then
+                        if type(v) == "table" and type(Flags[k]) == "table" then
+                            for subK, subV in pairs(v) do
+                                Flags[k][subK] = subV
+                            end
+                        else
+                            Flags[k] = v
+                        end
+                    end
+                end
+                print("[gay script :3 aimbot] Configuration loaded successfully.")
+            end
+        end
+    end
+end
+
+local function SaveConfig()
+    local HttpService = game:GetService("HttpService")
+    if writefile then
+        local success, err = pcall(function()
+            local serializable = {}
+            for k, v in pairs(Flags) do
+                if type(v) == "table" then
+                    local serializableSub = {}
+                    for subK, subV in pairs(v) do
+                        if type(subV) ~= "function" and type(subV) ~= "userdata" then
+                            serializableSub[subK] = subV
+                        end
+                    end
+                    serializable[k] = serializableSub
+                elseif type(v) ~= "function" and type(v) ~= "userdata" then
+                    serializable[k] = v
+                end
+            end
+            writefile("gay_script_aimbot_config.json", HttpService:JSONEncode(serializable))
+        end)
+        if success then
+            if UI and UI.Notify then
+                UI.Notify("Config", "Configuration saved successfully!", 3)
+            else
+                print("[gay script :3 aimbot] Configuration saved successfully.")
+            end
+        else
+            if UI and UI.Notify then
+                UI.Notify("Config", "Failed to save configuration: " .. tostring(err), 5)
+            else
+                warn("[gay script :3 aimbot] Failed to save configuration: " .. tostring(err))
+            end
+        end
+    else
+        if UI and UI.Notify then
+            UI.Notify("Config", "Exploit does not support writefile!", 5)
+        else
+            warn("[gay script :3 aimbot] Exploit does not support writefile!")
+        end
+    end
+end
+
+local function UpdateUIVisuals()
+    if not UIState or not UIState.Updaters then return end
+    for flag, value in pairs(Flags) do
+        local updater = UIState.Updaters[flag]
+        if updater then
+            if type(updater) == "function" then
+                pcall(updater, value)
+            elseif type(updater) == "table" and type(value) == "table" then
+                for k, v in pairs(value) do
+                    if type(updater[k]) == "function" then
+                        pcall(updater[k], v)
+                    end
+                end
+            end
+        end
+    end
+end
+
+pcall(LoadConfig)
+
 if SAFE_MODE then
     Flags["Aim/AimLock"]        = false
     Flags["Aim/AlwaysEnabled"]  = false
     Flags["ShootBot/Enabled"]   = false
     Flags["Misc/QTeleport"]     = false
 end
-
--- ╔══════════════════════════════════════════════════════════════╗
--- ║                 Settings Persistence System                  ║
--- ╚══════════════════════════════════════════════════════════════╝
-local SETTINGS_FILE = "gay_script_aimbot_settings.json"
-
--- Keys to skip when saving (internal state, not user-facing settings)
-local SKIP_SAVE_KEYS = {
-    ["Humanoid/Archivable"] = true,
-    ["Humanoid/BreakJointsOnDeath"] = true,
-    ["Humanoid/EvaluateStateMachine"] = true,
-    ["Humanoid/RequiresNeck"] = true,
-    ["Humanoid/AutoRotate"] = true,
-    ["Humanoid/PlatformStand"] = true,
-    ["Humanoid/Sit"] = true,
-    ["Humanoid/Jump"] = true,
-    ["Humanoid/AutoJumpEnabled"] = true,
-    ["Humanoid/JumpHeight"] = true,
-    ["Humanoid/JumpPower"] = true,
-    ["Humanoid/UseJumpPower"] = true,
-    ["Humanoid/AutomaticScalingEnabled"] = true,
-    ["Humanoid/Health"] = true,
-    ["Humanoid/MaxHealth"] = true,
-    ["Humanoid/HipHeight"] = true,
-    ["Humanoid/MaxSlopeAngle"] = true,
-    ["Humanoid/WalkSpeed"] = true,
-}
-
-local _savePending = false
-
-local function _serializeValue(val)
-    local t = type(val)
-    if t == "boolean" then
-        return val and "true" or "false"
-    elseif t == "number" then
-        return tostring(val)
-    elseif t == "string" then
-        -- escape quotes and backslashes
-        local escaped = val:gsub("\\", "\\\\"):gsub('"', '\\"')
-        return '"' .. escaped .. '"'
-    elseif t == "table" then
-        -- Serialize as a simple flat object (string keys -> primitive values)
-        local parts = {}
-        for k, v in pairs(val) do
-            local vt = type(v)
-            if vt == "boolean" or vt == "number" or vt == "string" then
-                local ks = tostring(k):gsub("\\", "\\\\"):gsub('"', '\\"')
-                table.insert(parts, '"' .. ks .. '":' .. _serializeValue(v))
-            end
-        end
-        return "{" .. table.concat(parts, ",") .. "}"
-    end
-    return "null"
-end
-
-function SaveSettings()
-    if not (writefile) then return end
-    local ok, err = pcall(function()
-        local parts = {}
-        for key, val in pairs(Flags) do
-            if not SKIP_SAVE_KEYS[key] then
-                local t = type(val)
-                if t == "boolean" or t == "number" or t == "string" or t == "table" then
-                    local ks = tostring(key):gsub("\\", "\\\\"):gsub('"', '\\"')
-                    table.insert(parts, '"' .. ks .. '":' .. _serializeValue(val))
-                end
-            end
-        end
-        local json = "{" .. table.concat(parts, ",") .. "}"
-        writefile(SETTINGS_FILE, json)
-    end)
-    if not ok then
-        warn("[gay script :3 aimbot] Failed to save settings: " .. tostring(err))
-    end
-end
-
-local function _parseSimpleJSON(str)
-    local result = {}
-    -- Strip outer braces
-    str = str:match("^%s*{(.+)}%s*$")
-    if not str then return result end
-
-    -- Tokenize key:value pairs. Handles nested objects one level deep.
-    local i = 1
-    local len = #str
-    while i <= len do
-        -- Skip whitespace and commas
-        while i <= len and (str:sub(i,i) == " " or str:sub(i,i) == "\t" or str:sub(i,i) == "\n" or str:sub(i,i) == ",") do
-            i = i + 1
-        end
-        if i > len then break end
-
-        -- Expect a quoted key
-        if str:sub(i,i) ~= '"' then break end
-        i = i + 1
-        local keyStart = i
-        while i <= len and not (str:sub(i,i) == '"' and str:sub(i-1,i-1) ~= "\\") do
-            i = i + 1
-        end
-        local key = str:sub(keyStart, i-1)
-        i = i + 1 -- skip closing quote
-
-        -- Skip colon
-        while i <= len and str:sub(i,i) == " " do i = i + 1 end
-        if str:sub(i,i) == ":" then i = i + 1 end
-        while i <= len and str:sub(i,i) == " " do i = i + 1 end
-
-        local valChar = str:sub(i,i)
-        local val
-
-        if valChar == '"' then
-            -- String
-            i = i + 1
-            local valStart = i
-            while i <= len and not (str:sub(i,i) == '"' and str:sub(i-1,i-1) ~= "\\") do
-                i = i + 1
-            end
-            val = str:sub(valStart, i-1)
-            val = val:gsub('\\"', '"'):gsub("\\\\", "\\")
-            i = i + 1
-        elseif valChar == "{" then
-            -- Nested table object
-            local depth = 0
-            local start = i
-            while i <= len do
-                local c = str:sub(i,i)
-                if c == "{" then depth = depth + 1
-                elseif c == "}" then
-                    depth = depth - 1
-                    if depth == 0 then i = i + 1; break end
-                end
-                i = i + 1
-            end
-            local inner = str:sub(start+1, i-2)
-            local tbl = {}
-            -- parse inner pairs
-            for ik, iv in inner:gmatch('"([^"]+)":(true|false|%-?%d+%.?%d*)') do
-                if iv == "true" then tbl[ik] = true
-                elseif iv == "false" then tbl[ik] = false
-                else tbl[ik] = tonumber(iv) end
-            end
-            -- also parse string values in nested
-            for ik, iv in inner:gmatch('"([^"]+)":"([^"]*)"') do
-                tbl[ik] = iv
-            end
-            val = tbl
-        elseif valChar == "t" then
-            val = true; i = i + 4
-        elseif valChar == "f" then
-            val = false; i = i + 5
-        elseif valChar == "n" then
-            val = nil; i = i + 4
-        else
-            -- Number (possibly negative)
-            local numStr = str:match("^%-?%d+%.?%d*", i)
-            if numStr then
-                val = tonumber(numStr)
-                i = i + #numStr
-            else
-                break
-            end
-        end
-
-        if key and val ~= nil then
-            result[key] = val
-        end
-    end
-    return result
-end
-
-function LoadSettings()
-    if not (readfile and isfile) then return end
-    local ok, err = pcall(function()
-        if not isfile(SETTINGS_FILE) then return end
-        local data = readfile(SETTINGS_FILE)
-        if not data or data == "" then return end
-        local saved = _parseSimpleJSON(data)
-        local count = 0
-        for key, val in pairs(saved) do
-            if Flags[key] ~= nil and not SKIP_SAVE_KEYS[key] then
-                local expectedType = type(Flags[key])
-                local valType = type(val)
-                if expectedType == valType then
-                    Flags[key] = val
-                    count = count + 1
-                elseif expectedType == "table" and valType == "table" then
-                    -- merge subtable (e.g. Aim/TargetGroups)
-                    for k2, v2 in pairs(val) do
-                        Flags[key][k2] = v2
-                    end
-                    count = count + 1
-                end
-            end
-        end
-        print(string.format("[gay script :3 aimbot] Settings loaded: %d flags restored from '%s'", count, SETTINGS_FILE))
-    end)
-    if not ok then
-        warn("[gay script :3 aimbot] Failed to load settings: " .. tostring(err))
-    end
-end
-
--- Schedule a deferred save (batches rapid changes into one write)
-function ScheduleSave()
-    if _savePending then return end
-    _savePending = true
-    task.defer(function()
-        _savePending = false
-        SaveSettings()
-    end)
-end
-
--- Load saved settings immediately so they're ready when the UI builds
-LoadSettings()
-
 local ScreenGui = nil
 local FovCircleFrame = nil
 local UI = {}
@@ -3006,7 +2878,7 @@ function UI.CreateWindow(title)
     UIState.ToggleVisible = ToggleVisible
 
     TrackConnection(UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if input.KeyCode == Enum.KeyCode.F1 then
+        if input.KeyCode == Enum.KeyCode.CapsLock then
             ToggleVisible()
         end
     end))
@@ -3200,7 +3072,6 @@ function UI.CreateToggle(page, text, flag, default, callback, lockable)
         local state = Flags[flag]
         updateVisuals(state)
         if callback then callback(state) end
-        ScheduleSave()
     end))
 end
 
@@ -3273,7 +3144,6 @@ function UI.CreateNumericInput(page, text, flag, default, min, max, step, unit, 
         Flags[flag] = val
         Input.Text = tostring(val)
         if callback then callback(val) end
-        ScheduleSave()
     end
 
     UIState.Updaters[flag] = function(val)
@@ -3346,7 +3216,6 @@ function UI.CreateButton(page, text, callback)
         TweenService:Create(Button, TWEENS.INSTANT, {Size = UDim2.new(1, 0, 0, 36)}):Play()
         if callback then callback() end
     end))
-    return Button
 end
 
 function GetPing()
@@ -8904,7 +8773,7 @@ local KeyboardRows = {
         {Text = "pg up", Width = 1}
     },
     {
-        {Text = "F1", Key = "F1", Width = 1.75, KeyCode = Enum.KeyCode.F1, Name = "Toggle Menu Visibility", Action = "F1", Desc = "Toggles visibility of the main gay script :3 aimbot menu GUI."},
+        {Text = "caps", Key = "CapsLock", Width = 1.75, KeyCode = Enum.KeyCode.CapsLock, Name = "Toggle Menu Visibility", Action = "CapsLock", Desc = "Toggles visibility of the main gay script :3 aimbot menu GUI."},
         {Text = "A", Width = 1},
         {Text = "S", Width = 1},
         {Text = "D", Width = 1},
@@ -9386,7 +9255,6 @@ UI.CreateSection(CreditsTab, "Credits")
 UI.CreateButton(CreditsTab, "Developer: cat", function() end)
 UI.CreateButton(CreditsTab, "Helper: fanta", function() end)
 UI.CreateButton(CreditsTab, "Helper: zosua", function() end)
-UI.CreateButton(CreditsTab, "Helper: R1ZE", function() end)
 
 
 function ShowWorldHumList(page)
@@ -9906,32 +9774,7 @@ if SAFE_MODE then
 end
 UI.CreateSection(AimTab, "Camera Tracking Assistant")
 UI.CreateToggle(AimTab, "Enable Camera Tracking (Ctrl + ~)", "Aim/AimLock", Flags["Aim/AimLock"])
-UI.CreateToggle(AimTab, "Always Active (Auto tracking)", "Aim/AlwaysEnabled", Flags["Aim/AlwaysEnabled"])
-UI.CreateToggle(AimTab, "Use Custom Keybind instead of RMB", "Aim/KeybindEnabled", Flags["Aim/KeybindEnabled"])
-local BindingActive = false
-local AimKeyButton
-AimKeyButton = UI.CreateButton(AimTab, "Tracking Keybind: " .. (Flags["Aim/AimKey"] or "E"), function()
-	if BindingActive then return end
-	BindingActive = true
-	AimKeyButton.Text = "Press any key..."
-	local conn
-	conn = Services.UserInputService.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.Keyboard then
-			local keyName = input.KeyCode.Name
-			Flags["Aim/AimKey"] = keyName
-			AimKeyButton.Text = "Tracking Keybind: " .. keyName
-			conn:Disconnect()
-			BindingActive = false
-		elseif input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.MouseButton2 or input.UserInputType == Enum.UserInputType.MouseButton3 then
-			local buttonName = input.UserInputType.Name
-			Flags["Aim/AimKey"] = buttonName
-			AimKeyButton.Text = "Tracking Keybind: " .. buttonName
-			conn:Disconnect()
-			BindingActive = false
-		end
-	end)
-end)
-
+UI.CreateToggle(AimTab, "Always Active (No Keybind — If OFF: hold RMB to track)", "Aim/AlwaysEnabled", Flags["Aim/AlwaysEnabled"])
 UI.CreateToggle(AimTab, "Ignore Teammates", "Aim/TeamCheck", Flags["Aim/TeamCheck"])
 UI.CreateToggle(AimTab, "Visibility Check (Raycast)", "Aim/VisibilityCheck", Flags["Aim/VisibilityCheck"])
 UI.CreateToggle(AimTab, "Show Tracking Indicator Dots", "Aim/ShowAssistDots", Flags["Aim/ShowAssistDots"])
@@ -10675,6 +10518,21 @@ UI.CreateButton(MiscTab, "Force Reload (Reload latest script version from GitHub
 
 UI.CreateSection(MiscTab, "Configuration")
 
+UI.CreateButton(MiscTab, "Save Config", SaveConfig)
+UI.CreateButton(MiscTab, "Load Config", function()
+    LoadConfig()
+    if SAFE_MODE then
+        Flags["Aim/AimLock"]        = false
+        Flags["Aim/AlwaysEnabled"]  = false
+        Flags["ShootBot/Enabled"]   = false
+        Flags["Misc/QTeleport"]     = false
+    end
+    UpdateUIVisuals()
+    if UI and UI.Notify then
+        UI.Notify("Config", "Configuration loaded successfully!", 3)
+    end
+end)
+
 do
     local smRow = Instance.new("Frame")
     smRow.Size = UDim2.new(1, 0, 0, 28)
@@ -10918,21 +10776,8 @@ TrackConnection(Services.UserInputService.InputBegan:Connect(function(input, gam
         H1ghl1ght3rState.SHIFT_HELD = true
     end
 
-    if not gameProcessed then
-        local isAimKey = false
-        if Flags["Aim/KeybindEnabled"] then
-            local targetKey = Flags["Aim/AimKey"] or "E"
-            if targetKey:sub(1, 11) == "MouseButton" then
-                if input.UserInputType.Name == targetKey then isAimKey = true end
-            else
-                if input.KeyCode.Name == targetKey then isAimKey = true end
-            end
-        else
-            if input.UserInputType == Enum.UserInputType.MouseButton2 then isAimKey = true end
-        end
-        if isAimKey then
-            AimState.Aim = Flags["Aim/AimLock"]
-        end
+    if not gameProcessed and input.UserInputType == Enum.UserInputType.MouseButton2 then
+        AimState.Aim = Flags["Aim/AimLock"]
     end
 
     if not gameProcessed and (input.KeyCode == Enum.KeyCode.I or input.KeyCode == Enum.KeyCode.O) then
@@ -11042,21 +10887,8 @@ TrackConnection(Services.UserInputService.InputEnded:Connect(function(input)
         end
     end
 
-    do
-        local isAimKey = false
-        if Flags["Aim/KeybindEnabled"] then
-            local targetKey = Flags["Aim/AimKey"] or "E"
-            if targetKey:sub(1, 11) == "MouseButton" then
-                if input.UserInputType.Name == targetKey then isAimKey = true end
-            else
-                if input.KeyCode.Name == targetKey then isAimKey = true end
-            end
-        else
-            if input.UserInputType == Enum.UserInputType.MouseButton2 then isAimKey = true end
-        end
-        if isAimKey then
-            AimState.Aim = false
-        end
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        AimState.Aim = false
     end
 end))
 
@@ -12152,15 +11984,3 @@ print(string.format("[gay script :3 aimbot v%s] Br3ak3r: %s", VERSION, Flags["Br
 print(string.format("[gay script :3 aimbot v%s] Press RIGHT SHIFT to toggle UI visibility", VERSION))
 print(string.format("[gay script :3 aimbot v%s] Br3ak3r Controls: Ctrl+Click=Break | Ctrl+Z=Undo | Ctrl+B=Toggle", VERSION))
 print(string.format("[gay script :3 aimbot v%s] Distance Colors: Pink=Closest | Red≤750 | Yellow≤1875 | Green>1875", VERSION))
-
--- Auto-save settings every 30 seconds in the background
-local autoSaveThread = task.spawn(function()
-    while GayScript3Aimbot.Active do
-        task.wait(30)
-        if GayScript3Aimbot.Active then
-            SaveSettings()
-        end
-    end
-end)
-TrackThread(autoSaveThread)
-print(string.format("[gay script :3 aimbot v%s] Settings persistence enabled — auto-saving to '%s' every 30s", VERSION, SETTINGS_FILE))

@@ -1253,7 +1253,7 @@ Comet.Active = true;
 Comet.Draggable = true;
 Scroller.CanvasPosition = Vector2.new(0, 0);
 protectUI(CometGUI);
-local Notification = (loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/notifications")))();
+local Notification = (loadstring(game:HttpGet("https://raw.githubusercontent.com/slap11111/gay-script/main/notifications")))();
 local Notify = Notification.Notify;
 if SupportedGame == true then
 	Notify({
