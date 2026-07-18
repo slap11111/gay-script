@@ -57900,28 +57900,18 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 
 			local function findPart(char, name)
 				local cache = charCache[char]
-				if not cache then
-					cache = {}
-					for _, child in ipairs(char:GetChildren()) do
-						if child:IsA("BasePart") then
-							local cleanName = child.Name:lower():gsub("%s+", "")
-							cache[cleanName] = child
+				if cache then
+					local targetNames = getPossibleNames(name)
+					for _, targetName in ipairs(targetNames) do
+						local part = cache[targetName]
+						if part then
+							return part
 						end
 					end
-					charCache[char] = cache
-				end
-
-				local targetNames = getPossibleNames(name)
-				for _, targetName in ipairs(targetNames) do
-					local part = cache[targetName]
-					if part then
-						return part
+					local targetName = name:lower():gsub("%s+", "")
+					if targetName == "uppertorso" or targetName == "lowertorso" then
+						return cache["torso"]
 					end
-				end
-
-				local targetName = name:lower():gsub("%s+", "")
-				if targetName == "uppertorso" or targetName == "lowertorso" then
-					return cache["torso"]
 				end
 				return nil
 			end
@@ -57943,29 +57933,47 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 					local char = player.Character
 					local hum = char and char:FindFirstChildOfClass("Humanoid")
 					if char and hum and hum.Health > 0 then
+						local children = char:GetChildren()
 						local cache = charCache[char]
-						if not cache then
+						if not cache or cache.__childCount ~= #children then
 							cache = {}
-							for _, child in ipairs(char:GetChildren()) do
+							cache.__childCount = #children
+							for _, child in ipairs(children) do
 								if child:IsA("BasePart") then
 									local cleanName = child.Name:lower():gsub("%s+", "")
 									cache[cleanName] = child
+									pcall(function()
+										for _, subChild in ipairs(child:GetChildren()) do
+											if subChild:IsA("Attachment") then
+												local attClean = cleanName .. "_" .. subChild.Name:lower():gsub("%s+", "")
+												cache[attClean] = subChild
+											end
+										end
+									end)
 								end
 							end
 							charCache[char] = cache
 						end
 
-						local isR15 = cache["uppertorso"] ~= nil or cache["lowertorso"] ~= nil
+						local isR15 = (cache["uppertorso"] ~= nil or cache["lowertorso"] ~= nil or
+									   cache["leftupperarm"] ~= nil or cache["rightupperarm"] ~= nil or
+									   cache["leftupperleg"] ~= nil or cache["rightupperleg"] ~= nil or
+									   cache["lupperarm"] ~= nil or cache["rupperarm"] ~= nil or
+									   cache["lupperleg"] ~= nil or cache["rupperleg"] ~= nil)
 						local isR6 = not isR15
 						local rawLines = {}
 						local function getPartOrAttachmentPos(part, attName)
 							if not part then return nil end
-							local att = attName and part:FindFirstChild(attName)
-							if att and att:IsA("Attachment") then
-								local success, pos = pcall(function()
-									return part.CFrame:PointToWorldSpace(att.Position)
-								end)
-								if success and pos then return pos end
+							if cache and attName then
+								local partCleanName = part.Name:lower():gsub("%s+", "")
+								local attCleanName = attName:lower():gsub("%s+", "")
+								local att = cache[partCleanName .. "_" .. attCleanName]
+								if att then
+									local success, pos = pcall(function()
+										return part.CFrame:PointToWorldSpace(att.Position)
+									end)
+									if success and pos then return pos end
+								end
 							end
 							return part.Position
 						end
