@@ -57850,22 +57850,57 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 			local localPlayer = Players.LocalPlayer
 			local playersList = Players:GetPlayers()
 
+			local charCache = NAStuff.CharPartCaches
+			if not charCache then
+				charCache = {}
+				NAStuff.CharPartCaches = charCache
+			end
+
+			for cachedChar, _ in pairs(charCache) do
+				if not cachedChar.Parent then
+					charCache[cachedChar] = nil
+				end
+			end
+
+			local function getPossibleNames(name)
+				local n = name:lower():gsub("%s+", "")
+				local list = {n}
+				if n:find("^left") then
+					local rest = n:sub(5)
+					table.insert(list, "l" .. rest)
+					table.insert(list, "l_" .. rest)
+				elseif n:find("^right") then
+					local rest = n:sub(6)
+					table.insert(list, "r" .. rest)
+					table.insert(list, "r_" .. rest)
+				end
+				return list
+			end
+
 			local function findPart(char, name)
-				local targetName = name:lower():gsub("%s+", "")
-				for _, child in ipairs(char:GetChildren()) do
-					if child:IsA("BasePart") then
-						local childName = child.Name:lower():gsub("%s+", "")
-						if childName == targetName then
-							return child
+				local cache = charCache[char]
+				if not cache then
+					cache = {}
+					for _, child in ipairs(char:GetChildren()) do
+						if child:IsA("BasePart") then
+							local cleanName = child.Name:lower():gsub("%s+", "")
+							cache[cleanName] = child
 						end
+					end
+					charCache[char] = cache
+				end
+
+				local targetNames = getPossibleNames(name)
+				for _, targetName in ipairs(targetNames) do
+					local part = cache[targetName]
+					if part then
+						return part
 					end
 				end
+
+				local targetName = name:lower():gsub("%s+", "")
 				if targetName == "uppertorso" or targetName == "lowertorso" then
-					for _, child in ipairs(char:GetChildren()) do
-						if child:IsA("BasePart") and child.Name:lower() == "torso" then
-							return child
-						end
-					end
+					return cache["torso"]
 				end
 				return nil
 			end
@@ -57888,16 +57923,19 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 					local char = player.Character
 					local hum = char and char:FindFirstChildOfClass("Humanoid")
 					if char and hum and hum.Health > 0 then
-						local isR15 = false
-						for _, child in ipairs(char:GetChildren()) do
-							if child:IsA("BasePart") then
-								local nameL = child.Name:lower()
-								if nameL == "uppertorso" or nameL == "upper torso" or nameL == "lowertorso" or nameL == "lower torso" then
-									isR15 = true
-									break
+						local cache = charCache[char]
+						if not cache then
+							cache = {}
+							for _, child in ipairs(char:GetChildren()) do
+								if child:IsA("BasePart") then
+									local cleanName = child.Name:lower():gsub("%s+", "")
+									cache[cleanName] = child
 								end
 							end
+							charCache[char] = cache
 						end
+
+						local isR15 = cache["uppertorso"] ~= nil or cache["lowertorso"] ~= nil
 						local isR6 = not isR15
 						local rawLines = {}
 						
