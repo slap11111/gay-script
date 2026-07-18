@@ -188,6 +188,220 @@ if SAFE_MODE then
     Flags["ShootBot/Enabled"]   = false
     Flags["Misc/QTeleport"]     = false
 end
+
+-- ╔══════════════════════════════════════════════════════════════╗
+-- ║                 Settings Persistence System                  ║
+-- ╚══════════════════════════════════════════════════════════════╝
+local SETTINGS_FILE = "gay_script_aimbot_settings.json"
+
+-- Keys to skip when saving (internal state, not user-facing settings)
+local SKIP_SAVE_KEYS = {
+    ["Humanoid/Archivable"] = true,
+    ["Humanoid/BreakJointsOnDeath"] = true,
+    ["Humanoid/EvaluateStateMachine"] = true,
+    ["Humanoid/RequiresNeck"] = true,
+    ["Humanoid/AutoRotate"] = true,
+    ["Humanoid/PlatformStand"] = true,
+    ["Humanoid/Sit"] = true,
+    ["Humanoid/Jump"] = true,
+    ["Humanoid/AutoJumpEnabled"] = true,
+    ["Humanoid/JumpHeight"] = true,
+    ["Humanoid/JumpPower"] = true,
+    ["Humanoid/UseJumpPower"] = true,
+    ["Humanoid/AutomaticScalingEnabled"] = true,
+    ["Humanoid/Health"] = true,
+    ["Humanoid/MaxHealth"] = true,
+    ["Humanoid/HipHeight"] = true,
+    ["Humanoid/MaxSlopeAngle"] = true,
+    ["Humanoid/WalkSpeed"] = true,
+}
+
+local _savePending = false
+
+local function _serializeValue(val)
+    local t = type(val)
+    if t == "boolean" then
+        return val and "true" or "false"
+    elseif t == "number" then
+        return tostring(val)
+    elseif t == "string" then
+        -- escape quotes and backslashes
+        local escaped = val:gsub("\\", "\\\\"):gsub('"', '\\"')
+        return '"' .. escaped .. '"'
+    elseif t == "table" then
+        -- Serialize as a simple flat object (string keys -> primitive values)
+        local parts = {}
+        for k, v in pairs(val) do
+            local vt = type(v)
+            if vt == "boolean" or vt == "number" or vt == "string" then
+                local ks = tostring(k):gsub("\\", "\\\\"):gsub('"', '\\"')
+                table.insert(parts, '"' .. ks .. '":' .. _serializeValue(v))
+            end
+        end
+        return "{" .. table.concat(parts, ",") .. "}"
+    end
+    return "null"
+end
+
+function SaveSettings()
+    if not (writefile) then return end
+    local ok, err = pcall(function()
+        local parts = {}
+        for key, val in pairs(Flags) do
+            if not SKIP_SAVE_KEYS[key] then
+                local t = type(val)
+                if t == "boolean" or t == "number" or t == "string" or t == "table" then
+                    local ks = tostring(key):gsub("\\", "\\\\"):gsub('"', '\\"')
+                    table.insert(parts, '"' .. ks .. '":' .. _serializeValue(val))
+                end
+            end
+        end
+        local json = "{" .. table.concat(parts, ",") .. "}"
+        writefile(SETTINGS_FILE, json)
+    end)
+    if not ok then
+        warn("[gay script :3 aimbot] Failed to save settings: " .. tostring(err))
+    end
+end
+
+local function _parseSimpleJSON(str)
+    local result = {}
+    -- Strip outer braces
+    str = str:match("^%s*{(.+)}%s*$")
+    if not str then return result end
+
+    -- Tokenize key:value pairs. Handles nested objects one level deep.
+    local i = 1
+    local len = #str
+    while i <= len do
+        -- Skip whitespace and commas
+        while i <= len and (str:sub(i,i) == " " or str:sub(i,i) == "\t" or str:sub(i,i) == "\n" or str:sub(i,i) == ",") do
+            i = i + 1
+        end
+        if i > len then break end
+
+        -- Expect a quoted key
+        if str:sub(i,i) ~= '"' then break end
+        i = i + 1
+        local keyStart = i
+        while i <= len and not (str:sub(i,i) == '"' and str:sub(i-1,i-1) ~= "\\") do
+            i = i + 1
+        end
+        local key = str:sub(keyStart, i-1)
+        i = i + 1 -- skip closing quote
+
+        -- Skip colon
+        while i <= len and str:sub(i,i) == " " do i = i + 1 end
+        if str:sub(i,i) == ":" then i = i + 1 end
+        while i <= len and str:sub(i,i) == " " do i = i + 1 end
+
+        local valChar = str:sub(i,i)
+        local val
+
+        if valChar == '"' then
+            -- String
+            i = i + 1
+            local valStart = i
+            while i <= len and not (str:sub(i,i) == '"' and str:sub(i-1,i-1) ~= "\\") do
+                i = i + 1
+            end
+            val = str:sub(valStart, i-1)
+            val = val:gsub('\\"', '"'):gsub("\\\\", "\\")
+            i = i + 1
+        elseif valChar == "{" then
+            -- Nested table object
+            local depth = 0
+            local start = i
+            while i <= len do
+                local c = str:sub(i,i)
+                if c == "{" then depth = depth + 1
+                elseif c == "}" then
+                    depth = depth - 1
+                    if depth == 0 then i = i + 1; break end
+                end
+                i = i + 1
+            end
+            local inner = str:sub(start+1, i-2)
+            local tbl = {}
+            -- parse inner pairs
+            for ik, iv in inner:gmatch('"([^"]+)":(true|false|%-?%d+%.?%d*)') do
+                if iv == "true" then tbl[ik] = true
+                elseif iv == "false" then tbl[ik] = false
+                else tbl[ik] = tonumber(iv) end
+            end
+            -- also parse string values in nested
+            for ik, iv in inner:gmatch('"([^"]+)":"([^"]*)"') do
+                tbl[ik] = iv
+            end
+            val = tbl
+        elseif valChar == "t" then
+            val = true; i = i + 4
+        elseif valChar == "f" then
+            val = false; i = i + 5
+        elseif valChar == "n" then
+            val = nil; i = i + 4
+        else
+            -- Number (possibly negative)
+            local numStr = str:match("^%-?%d+%.?%d*", i)
+            if numStr then
+                val = tonumber(numStr)
+                i = i + #numStr
+            else
+                break
+            end
+        end
+
+        if key and val ~= nil then
+            result[key] = val
+        end
+    end
+    return result
+end
+
+function LoadSettings()
+    if not (readfile and isfile) then return end
+    local ok, err = pcall(function()
+        if not isfile(SETTINGS_FILE) then return end
+        local data = readfile(SETTINGS_FILE)
+        if not data or data == "" then return end
+        local saved = _parseSimpleJSON(data)
+        local count = 0
+        for key, val in pairs(saved) do
+            if Flags[key] ~= nil and not SKIP_SAVE_KEYS[key] then
+                local expectedType = type(Flags[key])
+                local valType = type(val)
+                if expectedType == valType then
+                    Flags[key] = val
+                    count = count + 1
+                elseif expectedType == "table" and valType == "table" then
+                    -- merge subtable (e.g. Aim/TargetGroups)
+                    for k2, v2 in pairs(val) do
+                        Flags[key][k2] = v2
+                    end
+                    count = count + 1
+                end
+            end
+        end
+        print(string.format("[gay script :3 aimbot] Settings loaded: %d flags restored from '%s'", count, SETTINGS_FILE))
+    end)
+    if not ok then
+        warn("[gay script :3 aimbot] Failed to load settings: " .. tostring(err))
+    end
+end
+
+-- Schedule a deferred save (batches rapid changes into one write)
+function ScheduleSave()
+    if _savePending then return end
+    _savePending = true
+    task.defer(function()
+        _savePending = false
+        SaveSettings()
+    end)
+end
+
+-- Load saved settings immediately so they're ready when the UI builds
+LoadSettings()
+
 local ScreenGui = nil
 local FovCircleFrame = nil
 local UI = {}
@@ -2986,6 +3200,7 @@ function UI.CreateToggle(page, text, flag, default, callback, lockable)
         local state = Flags[flag]
         updateVisuals(state)
         if callback then callback(state) end
+        ScheduleSave()
     end))
 end
 
@@ -3058,6 +3273,7 @@ function UI.CreateNumericInput(page, text, flag, default, min, max, step, unit, 
         Flags[flag] = val
         Input.Text = tostring(val)
         if callback then callback(val) end
+        ScheduleSave()
     end
 
     UIState.Updaters[flag] = function(val)
@@ -11936,3 +12152,15 @@ print(string.format("[gay script :3 aimbot v%s] Br3ak3r: %s", VERSION, Flags["Br
 print(string.format("[gay script :3 aimbot v%s] Press RIGHT SHIFT to toggle UI visibility", VERSION))
 print(string.format("[gay script :3 aimbot v%s] Br3ak3r Controls: Ctrl+Click=Break | Ctrl+Z=Undo | Ctrl+B=Toggle", VERSION))
 print(string.format("[gay script :3 aimbot v%s] Distance Colors: Pink=Closest | Red≤750 | Yellow≤1875 | Green>1875", VERSION))
+
+-- Auto-save settings every 30 seconds in the background
+local autoSaveThread = task.spawn(function()
+    while GayScript3Aimbot.Active do
+        task.wait(30)
+        if GayScript3Aimbot.Active then
+            SaveSettings()
+        end
+    end
+end)
+TrackThread(autoSaveThread)
+print(string.format("[gay script :3 aimbot v%s] Settings persistence enabled — auto-saving to '%s' every 30s", VERSION, SETTINGS_FILE))
