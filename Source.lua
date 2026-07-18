@@ -58016,6 +58016,11 @@ cmd.add({"sesp", "skeletonesp", "bonesp"}, {"sesp", "Toggles Skeleton ESP on/off
 									local posBW = getPartOrAttachmentPos(partB, pair[4])
 									if posAW and posBW then
 										table.insert(rawLines, {posAW, posBW})
+										-- Temporarily print first 2 connections for player Cheesesteak to debug
+										if player.Name:lower():find("cheese") then
+											warn(string.format("[ESP DEBUG] %s -> %s | posA: %s | posB: %s | dist: %f", 
+												pair[1], pair[2], tostring(posAW), tostring(posBW), (posAW - posBW).Magnitude))
+										end
 									end
 								end
 							end
