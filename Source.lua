@@ -58368,6 +58368,7 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				AIM_FOVEnabled = true,
 				AIM_FOV = 120,
 				AIM_Smooth = 3.5,
+				AIM_WallCheck = true,
 				
 				RADAR_Enabled = true,
 				RADAR_Size = 140,
@@ -58431,6 +58432,36 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				Visibility = 0.1,
 				LocalChar = 0.2
 			}
+			
+			local HttpService = game:GetService("HttpService")
+			local function SaveConfig()
+				local file_data = {}
+				for k, v in pairs(Config) do
+					if type(v) == "number" or type(v) == "boolean" then
+						file_data[k] = v
+					end
+				end
+				local success, encoded = pcall(function() return HttpService:JSONEncode(file_data) end)
+				if success then
+					pcall(writefile, "riotfall_cimbot_config.json", encoded)
+				end
+			end
+			
+			local function LoadConfig()
+				if isfile and isfile("riotfall_cimbot_config.json") then
+					local success, content = pcall(readfile, "riotfall_cimbot_config.json")
+					if success then
+						local success_decode, decoded = pcall(function() return HttpService:JSONDecode(content) end)
+						if success_decode and type(decoded) == "table" then
+							for k, v in pairs(decoded) do
+								if Config[k] ~= nil then
+									Config[k] = v
+								end
+							end
+						end
+					end
+				end
+			end
 
 			local Connections = {}
 			local espObjects = {}
@@ -58718,14 +58749,20 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 					if isEnemy then
 						local part = GetTargetPart(character)
 						if part then
-							local screenPos, onScreen = cam:WorldToViewportPoint(part.Position)
-							if onScreen then
-								local screenVec = Vector2.new(screenPos.X, screenPos.Y)
-								local dist = (mousePos - screenVec).Magnitude
-								if dist < closestDist then
-									closestDist = dist
-									closestPos = screenVec
-									targetEnemy = part
+							local passWallCheck = true
+							if Config.AIM_WallCheck then
+								passWallCheck = IsVisible(part)
+							end
+							if passWallCheck then
+								local screenPos, onScreen = cam:WorldToViewportPoint(part.Position)
+								if onScreen then
+									local screenVec = Vector2.new(screenPos.X, screenPos.Y)
+									local dist = (mousePos - screenVec).Magnitude
+									if dist < closestDist then
+										closestDist = dist
+										closestPos = screenVec
+										targetEnemy = part
+									end
 								end
 							end
 						end
@@ -58902,8 +58939,7 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 			local function UpdateFOV()
 				if Config.AIM_Enabled and Config.AIM_FOVEnabled then
 					local mousePos = UserInputService:GetMouseLocation()
-					local guiInset = game:GetService("GuiService"):GetGuiInset()
-					FOVCircle.Position = UDim2.new(0, mousePos.X, 0, mousePos.Y + guiInset.Y)
+					FOVCircle.Position = UDim2.new(0, mousePos.X, 0, mousePos.Y)
 					FOVCircle.Size = UDim2.new(0, Config.AIM_FOV * 2, 0, Config.AIM_FOV * 2)
 					FOVStroke.Color = State.Aiming and Palette.FOV_Active or Palette.FOV_Circle
 					FOVCircle.Visible = true
@@ -59086,7 +59122,7 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				label.TextColor3 = Palette.Accent
 				label.TextXAlignment = Enum.TextXAlignment.Left
 				label.TextStrokeTransparency = 0.6
-				label.Text = "riotfall by leet"
+				label.Text = "riotfall by cat"
 				label.Parent = container
 				
 				local xenoLabel = Instance.new("TextLabel")
@@ -59242,7 +59278,36 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				local yOffset = Tuning.PanelHeaderH + 3
 				
 				for _, item in ipairs(items) do
-					if item.type == "toggle" then
+					if item.type == "button" then
+						local btn = Instance.new("TextButton")
+						btn.Name = item.name
+						btn.BackgroundColor3 = Palette.ItemHover
+						btn.BackgroundTransparency = 1
+						btn.BorderSizePixel = 0
+						btn.Position = UDim2.new(0, 0, 0, yOffset)
+						btn.Size = UDim2.new(1, 0, 0, Tuning.ItemHeight)
+						btn.Font = Enum.Font.RobotoMono
+						btn.TextSize = Tuning.FontSize
+						btn.TextXAlignment = Enum.TextXAlignment.Left
+						btn.TextColor3 = Palette.Text
+						btn.Text = item.name
+						btn.AutoButtonColor = false
+						btn.Parent = panel
+						
+						local pad = Instance.new("UIPadding")
+						pad.PaddingLeft = UDim.new(0, 10)
+						pad.Parent = btn
+						
+						btn.MouseEnter:Connect(function() btn.BackgroundTransparency = 0.5 end)
+						btn.MouseLeave:Connect(function() btn.BackgroundTransparency = 1 end)
+						btn.MouseButton1Click:Connect(function()
+							if item.callback then
+								item.callback()
+							end
+						end)
+						
+						yOffset = yOffset + Tuning.ItemHeight
+					elseif item.type == "toggle" then
 						local btn = Instance.new("TextButton")
 						btn.Name = item.key
 						btn.BackgroundColor3 = Palette.ItemHover
@@ -59378,6 +59443,7 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 			UI.Panels.Aimbot = CreatePanel("Aimbot", {
 				{type = "toggle", name = "Enabled", key = "AIM_Enabled"},
 				{type = "toggle", name = "ShowFOV", key = "AIM_FOVEnabled"},
+				{type = "toggle", name = "WallCheck", key = "AIM_WallCheck"},
 				{type = "slider", name = "FOV", key = "AIM_FOV", min = 30, max = 400, step = 5},
 				{type = "slider", name = "Smooth", key = "AIM_Smooth", min = 1, max = 15, step = 0.5}
 			}, UDim2.new(0, 165, 0, 55))
@@ -59390,7 +59456,9 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 
 			UI.Panels.Misc = CreatePanel("Misc", {
 				{type = "toggle", name = "Watermark", key = "MISC_Watermark"},
-				{type = "toggle", name = "ActiveList", key = "MISC_ActiveList"}
+				{type = "toggle", name = "ActiveList", key = "MISC_ActiveList"},
+				{type = "button", name = "Save Config", callback = function() SaveConfig() DoNotif("Config saved!", 1.5) end},
+				{type = "button", name = "Load Config", callback = function() LoadConfig() DoNotif("Config loaded!", 1.5) end}
 			}, UDim2.new(0, 475, 0, 55))
 
 			local function Unload()
@@ -59443,6 +59511,9 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 					UI.Watermark.Visible = Config.MISC_Watermark
 				end
 			end)
+
+			-- Auto-load saved config on startup
+			pcall(LoadConfig)
 
 			for _, player in ipairs(Players:GetPlayers()) do
 				if player ~= LocalPlayer then
