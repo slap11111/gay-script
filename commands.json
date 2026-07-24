@@ -3111,6 +3111,17 @@
       "desc": "Toggles Skeleton ESP on/off (limbs through walls)"
     },
     {
+      "name": "cimbot",
+      "aliases": [
+        "cimbot",
+        "riotfallcimbot",
+        "recoilcimbot"
+      ],
+      "usage": "cimbot",
+      "args": "",
+      "desc": "Riotfall/Recoil Custom Aimbot & ESP"
+    },
+    {
       "name": "npcesp",
       "aliases": [
         "npcesp",
