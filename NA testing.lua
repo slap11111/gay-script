@@ -58403,23 +58403,23 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				PanelBg = Color3.fromRGB(18, 18, 20),
 				PanelHeader = Color3.fromRGB(25, 25, 28),
 				PanelBorder = Color3.fromRGB(45, 45, 50),
-				ItemOn = Color3.fromRGB(255, 65, 65),
+				ItemOn = Color3.fromRGB(255, 185, 254),
 				ItemOff = Color3.fromRGB(180, 180, 185),
 				ItemHover = Color3.fromRGB(35, 35, 40),
 				Text = Color3.fromRGB(230, 230, 235),
 				TextDim = Color3.fromRGB(130, 130, 140),
-				Accent = Color3.fromRGB(255, 65, 65),
+				Accent = Color3.fromRGB(255, 185, 254),
 				
-				ESP_Enemy = Color3.fromRGB(255, 65, 65),
+				ESP_Enemy = Color3.fromRGB(255, 185, 254),
 				ESP_Visible = Color3.fromRGB(85, 255, 127),
 				
-				FOV_Circle = Color3.fromRGB(255, 255, 255),
+				FOV_Circle = Color3.fromRGB(255, 185, 254),
 				FOV_Active = Color3.fromRGB(85, 255, 127),
 				
 				RadarBg = Color3.fromRGB(12, 12, 14),
-				RadarBorder = Color3.fromRGB(255, 65, 65),
+				RadarBorder = Color3.fromRGB(255, 185, 254),
 				RadarGrid = Color3.fromRGB(35, 35, 40),
-				RadarYou = Color3.fromRGB(255, 65, 65),
+				RadarYou = Color3.fromRGB(255, 185, 254),
 				RadarEnemy = Color3.fromRGB(85, 255, 127)
 			}
 
@@ -59168,6 +59168,43 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				end
 			end
 
+			local function MakeDraggable(panel, header)
+				local dragging = false
+				local dragInput, dragStart, startPos
+				
+				header.InputBegan:Connect(function(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+						dragging = true
+						dragStart = input.Position
+						startPos = panel.Position
+						
+						input.Changed:Connect(function()
+							if input.UserInputState == Enum.UserInputState.End then
+								dragging = false
+							end
+						end)
+					end
+				end)
+				
+				header.InputChanged:Connect(function(input)
+					if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+						dragInput = input
+					end
+				end)
+				
+				Connections[panel.Name .. "_drag"] = RunService.RenderStepped:Connect(function()
+					if dragging and dragInput then
+						local delta = dragInput.Position - dragStart
+						panel.Position = UDim2.new(
+							startPos.X.Scale, 
+							startPos.X.Offset + delta.X, 
+							startPos.Y.Scale, 
+							startPos.Y.Offset + delta.Y
+						)
+					end
+				end)
+			end
+
 			local function CreatePanel(title, items, pos)
 				local totalHeight = Tuning.PanelHeaderH
 				for _, item in ipairs(items) do
@@ -59187,7 +59224,7 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				panel.Position = pos
 				panel.Size = UDim2.new(0, Tuning.PanelWidth, 0, totalHeight)
 				panel.Active = true
-				panel.Draggable = true
+				panel.Draggable = false
 				panel.Parent = UI.ScreenGui
 				
 				local stroke = Instance.new("UIStroke")
@@ -59202,6 +59239,8 @@ cmd.add({"cimbot", "riotfallcimbot", "recoilcimbot"}, {"cimbot", "Riotfall/Recoi
 				header.BorderSizePixel = 0
 				header.Size = UDim2.new(1, 0, 0, Tuning.PanelHeaderH)
 				header.Parent = panel
+				
+				MakeDraggable(panel, header)
 				
 				local titleLabel = Instance.new("TextLabel")
 				titleLabel.Name = "Title"
