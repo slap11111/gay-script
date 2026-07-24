@@ -6635,27 +6635,182 @@ CheckIfNPC = function(character)
 end
 
 NAmanage.IsValidESPModel = function(model, allowNPC)
-	if not (model and model:IsA("Model")) then
+	if not model then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Rejecting: Model is nil")
+		end
 		return false
 	end
-	if not model.Parent or not Workspace or not model:IsDescendantOf(Workspace) then
+	if typeof(model) ~= "Instance" then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Rejecting: Target is not an Instance (type: " .. typeof(model) .. ")")
+		end
 		return false
 	end
+	if not model:IsA("Model") then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Rejecting [" .. model.Name .. "]: Not a Model (class: " .. model.ClassName .. ")")
+		end
+		return false
+	end
+	if not model.Parent then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Rejecting [" .. model.Name .. "]: Parent is nil")
+		end
+		return false
+	end
+	if not Workspace or not model:IsDescendantOf(Workspace) then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Rejecting [" .. model.Name .. "]: Not a descendant of Workspace")
+		end
+		return false
+	end
+
+	-- 1. Humanoid check with fallbacks
 	local hum = model:FindFirstChildOfClass("Humanoid")
-	if not hum or hum.Health <= 0 or hum.Parent == nil then
+	local hasValidHealth = false
+	local healthMsg = ""
+	if hum then
+		if hum.Health > 0 and hum.Parent ~= nil then
+			hasValidHealth = true
+			healthMsg = "Found standard Humanoid with health: " .. tostring(hum.Health)
+		else
+			healthMsg = "Found standard Humanoid but health is 0 or parented to nil"
+		end
+	else
+		-- Fallback 1: Check for custom health attributes (e.g. model:GetAttribute("Health"))
+		local attrHealth = model:GetAttribute("Health")
+		local attrMaxHealth = model:GetAttribute("MaxHealth") or 100
+		if attrHealth and typeof(attrHealth) == "number" then
+			if attrHealth > 0 then
+				hasValidHealth = true
+				healthMsg = "Fallback: Found Health attribute with value: " .. tostring(attrHealth)
+			else
+				healthMsg = "Fallback: Found Health attribute but value is 0"
+			end
+		else
+			-- Fallback 2: Check for health values inside the model (e.g. ValueObjects named Health, hp, HP, etc.)
+			local hpValObj = model:FindFirstChild("Health") or model:FindFirstChild("hp") or model:FindFirstChild("HP")
+			if hpValObj and (hpValObj:IsA("NumberValue") or hpValObj:IsA("IntValue")) then
+				if hpValObj.Value > 0 then
+					hasValidHealth = true
+					healthMsg = "Fallback: Found health ValueObject [" .. hpValObj.Name .. "] with value: " .. tostring(hpValObj.Value)
+				else
+					healthMsg = "Fallback: Found health ValueObject [" .. hpValObj.Name .. "] but value is 0"
+				end
+			else
+				-- Fallback 3: Skinned meshes / games without humanoids or health indicators
+				-- Check if we have base parts to draw boxes on. If so, default to true but log it.
+				local firstPart = model:FindFirstChildWhichIsA("BasePart")
+				if firstPart then
+					hasValidHealth = true
+					healthMsg = "Fallback: No humanoid or custom health, but found BasePart [" .. firstPart.Name .. "]. Assuming alive/dummy."
+				else
+					healthMsg = "No humanoid, custom health, or BaseParts found"
+				end
+			end
+		end
+	end
+
+	if not hasValidHealth then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Rejecting [" .. model.Name .. "]: " .. healthMsg)
+		end
 		return false
 	end
+
+	-- 2. Root part check with fallbacks
 	local root = getRoot(model)
-	if not root or root.Parent == nil then
+	local hasValidRoot = false
+	local rootMsg = ""
+	if root and root.Parent ~= nil then
+		hasValidRoot = true
+		rootMsg = "Found standard root part: " .. root.Name
+	else
+		-- Fallback 1: Look for other common root part names
+		local alternativeRoot = model:FindFirstChild("HumanoidRootPart") 
+			or model:FindFirstChild("Torso") 
+			or model:FindFirstChild("UpperTorso")
+			or model:FindFirstChild("Head")
+			or model:FindFirstChild("Pelvis")
+			or model:FindFirstChild("Root")
+			or model:FindFirstChild("Center")
+		if alternativeRoot and alternativeRoot:IsA("BasePart") then
+			hasValidRoot = true
+			rootMsg = "Fallback: Using alternative part [" .. alternativeRoot.Name .. "] as root"
+		else
+			-- Fallback 2: Find the first base part in the model
+			local firstPart = model:FindFirstChildWhichIsA("BasePart")
+			if firstPart then
+				hasValidRoot = true
+				rootMsg = "Fallback: No alternative root part found. Using first BasePart [" .. firstPart.Name .. "] as root"
+			else
+				rootMsg = "No root part or any BasePart found in the model"
+			end
+		end
+	end
+
+	if not hasValidRoot then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Rejecting [" .. model.Name .. "]: " .. rootMsg)
+		end
 		return false
 	end
+
 	if allowNPC then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Accepting NPC/Custom target [" .. model.Name .. "] (" .. healthMsg .. "; " .. rootMsg .. ")")
+		end
 		return true
 	end
+
+	-- 3. Player mapping check with fallbacks
 	local okPlr, plr = pcall(function()
 		return __lt.cm("Players", "GetPlayerFromCharacter", model)
 	end)
-	return okPlr and plr ~= nil
+	
+	if okPlr and plr ~= nil then
+		if NAStuff.ESP_Debug ~= false then
+			print("[Nameless ESP-Debug] Accepting Player [" .. plr.Name .. "] mapped via standard character")
+		end
+		return true
+	else
+		-- Fallback 1: Resolve player by username match with the model name
+		local targetPlayer = Players:FindFirstChild(model.Name)
+		if targetPlayer then
+			if NAStuff.ESP_Debug ~= false then
+				print("[Nameless ESP-Debug] Fallback: Mapped model [" .. model.Name .. "] to Player [" .. targetPlayer.Name .. "] via name matching")
+			end
+			return true
+		end
+		
+		-- Fallback 2: Resolve player by UserId matching if the model name is a number
+		local uid = tonumber(model.Name)
+		if uid then
+			local targetPlayerUid = Players:GetPlayerByUserId(uid)
+			if targetPlayerUid then
+				if NAStuff.ESP_Debug ~= false then
+					print("[Nameless ESP-Debug] Fallback: Mapped model [" .. model.Name .. "] to Player [" .. targetPlayerUid.Name .. "] via UserId matching")
+				end
+				return true
+			end
+		end
+		
+		-- Fallback 3: If model name contains username as substring (e.g. "Player1_Rig")
+		for _, p in ipairs(Players:GetPlayers()) do
+			if string.find(model.Name, p.Name) or string.find(model.Name, p.DisplayName) then
+				if NAStuff.ESP_Debug ~= false then
+					print("[Nameless ESP-Debug] Fallback: Mapped model [" .. model.Name .. "] to Player [" .. p.Name .. "] via substring matching")
+				end
+				return true
+			end
+		end
+	end
+
+	if NAStuff.ESP_Debug ~= false then
+		print("[Nameless ESP-Debug] Rejecting [" .. model.Name .. "]: Could not map model to any active Roblox player. (Try registering as NPC / custom rig)")
+	end
+	return false
 end
 
 FindInTable = function(tbl,val)
@@ -32400,6 +32555,23 @@ NAmanage.ESP_UpdateOne = function(model, now, localRoot)
 	local owner = data.ownerPlayer
 	if not (owner and owner.Parent) then
 		owner = __lt.cm("Players", "GetPlayerFromCharacter", model)
+		if not owner then
+			owner = Players:FindFirstChild(model.Name)
+			if not owner then
+				local uid = tonumber(model.Name)
+				if uid then
+					owner = Players:GetPlayerByUserId(uid)
+				end
+			end
+			if not owner then
+				for _, p in ipairs(Players:GetPlayers()) do
+					if string.find(model.Name, p.Name) or string.find(model.Name, p.DisplayName) then
+						owner = p
+						break
+					end
+				end
+			end
+		end
 		if owner then
 			data.ownerPlayer = owner
 		end
@@ -32592,6 +32764,24 @@ NAmanage.ESP_UpdateOne = function(model, now, localRoot)
 			local hum = getPlrHum(model)
 			local h = hum and math.floor(hum.Health) or nil
 			local m = hum and math.floor(hum.MaxHealth) or nil
+			if not h or not m then
+				local attrH = model:GetAttribute("Health")
+				local attrM = model:GetAttribute("MaxHealth") or 100
+				if attrH and typeof(attrH) == "number" then
+					h = math.floor(attrH)
+					m = math.floor(attrM)
+				else
+					local hpVal = model:FindFirstChild("Health") or model:FindFirstChild("hp") or model:FindFirstChild("HP")
+					if hpVal and (hpVal:IsA("NumberValue") or hpVal:IsA("IntValue")) then
+						h = math.floor(hpVal.Value)
+						m = 100
+						local maxHpVal = model:FindFirstChild("MaxHealth") or model:FindFirstChild("maxhp") or model:FindFirstChild("MaxHP")
+						if maxHpVal and (maxHpVal:IsA("NumberValue") or maxHpVal:IsA("IntValue")) then
+							m = math.floor(maxHpVal.Value)
+						end
+					end
+				end
+			end
 			if h and m then pieces[#pieces + 1] = tostring(h) .. "/" .. tostring(m) .. " HP" end
 		end
 		if (NAStuff.ESP_ShowTeamText ~= false) and teamName and teamName ~= "None" then
