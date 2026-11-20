@@ -578,8 +578,20 @@ function OnLocalCharacterAdded(newChar)
 end
 
 globalEnv = getgenv and getgenv() or _G
-if rawget(globalEnv, "gay script :3 aimbot") then
-    return warn("[gay script :3 aimbot] Already loaded! Use Shutdown button to cleanup first.")
+do
+    -- NOTE: this used to check the key "gay script :3 aimbot", which is never set,
+    -- so the guard never fired and every re-run stacked another full copy of the
+    -- script (duplicate RenderStepped/Heartbeat loops, UIs, highlights, mousemoverel).
+    local existing = rawget(globalEnv, "GayScript3Aimbot")
+    if type(existing) == "table" and existing.Active then
+        if type(existing.Cleanup) == "function" then
+            warn("[gay script :3 aimbot] Previous instance detected, unloading it before reloading...")
+            pcall(existing.Cleanup)
+            task.wait(0.2)
+        else
+            return warn("[gay script :3 aimbot] Already loaded! Press Ctrl+U (or the Unload button) first.")
+        end
+    end
 end
 
 globalEnv.GayScript3Aimbot = {
@@ -8457,6 +8469,9 @@ function Cleanup()
     pcall(function()
         game:GetService("ContextActionService"):UnbindAction("FreecamToggle")
     end)
+    pcall(function()
+        game:GetService("ContextActionService"):UnbindAction("gay script :3 aimbotShortcuts")
+    end)
 
     GayScript3Aimbot.Active = false
 
@@ -8714,6 +8729,9 @@ function Cleanup()
 
     warn("[gay script :3 aimbot] Script Unloaded! You can now reload the script.")
 end
+GayScript3Aimbot.Cleanup = Cleanup
+
+local AIMBOT_SOURCE_URL = "https://raw.githubusercontent.com/slap11111/gay-script/refs/heads/main/NewAimbot.lua"
 
 function Reload()
     UI.Notify("gay script :3 aimbot", "Reloading script...")
@@ -8725,7 +8743,7 @@ function Reload()
     elseif isfile and isfile("gay script :3 aimbot/gay script :3 aimbot.lua") then
         loadstring(readfile("gay script :3 aimbot/gay script :3 aimbot.lua"))()
     else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/JakeHukari/gay script :3 aimbot/refs/heads/main/gay script :3 aimbot.lua", true))()
+        loadstring(game:HttpGet(AIMBOT_SOURCE_URL .. "?t=" .. tostring(tick()), true))()
     end
 end
 
@@ -8734,7 +8752,7 @@ function ForceReload()
     task.wait(0.1)
     Cleanup()
     task.wait(0.2)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/JakeHukari/gay script :3 aimbot/refs/heads/main/gay script :3 aimbot.lua", true))()
+    loadstring(game:HttpGet(AIMBOT_SOURCE_URL .. "?t=" .. tostring(tick()), true))()
 end
 
 local KeyboardRows = {
